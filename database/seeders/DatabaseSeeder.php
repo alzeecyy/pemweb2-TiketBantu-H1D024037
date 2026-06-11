@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
+use Illuminate\Support\Facades\Hash;
+
 class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
@@ -15,11 +17,40 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // 1. Jalankan CategorySeeder
+        $this->call(CategorySeeder::class);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // 2. Buat akun demo Admin
+        User::firstOrCreate(
+            ['email' => 'admin@tiketbantu.com'],
+            [
+                'name' => 'Admin TiketBantu',
+                'password' => Hash::make('password'),
+                'role' => 'admin',
+                'email_verified_at' => now(),
+            ]
+        );
+
+        // 3. Buat akun demo Agent/Petugas
+        User::firstOrCreate(
+            ['email' => 'agent@tiketbantu.com'],
+            [
+                'name' => 'Agen Support',
+                'password' => Hash::make('password'),
+                'role' => 'agent',
+                'email_verified_at' => now(),
+            ]
+        );
+
+        // 4. Buat akun demo User/Pelapor
+        User::firstOrCreate(
+            ['email' => 'user@tiketbantu.com'],
+            [
+                'name' => 'Pelapor Umum',
+                'password' => Hash::make('password'),
+                'role' => 'user',
+                'email_verified_at' => now(),
+            ]
+        );
     }
 }

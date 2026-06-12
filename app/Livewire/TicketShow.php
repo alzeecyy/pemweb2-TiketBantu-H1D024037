@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Ticket;
 use App\Models\User;
+use App\Notifications\TicketStatusChanged;
 
 class TicketShow extends Component
 {
@@ -37,6 +38,8 @@ class TicketShow extends Component
             abort(403);
         }
 
+        $oldStatus = $this->ticket->status;
+
         $this->ticket->update([
             'agent_id' => $user->id,
             'status' => 'diproses' // Otomatis ubah status ke diproses saat diambil
@@ -44,6 +47,11 @@ class TicketShow extends Component
 
         $this->agent_id = $user->id;
         $this->status = 'diproses';
+
+        // Kirim notifikasi email ke pelapor
+        if ($oldStatus !== 'diproses') {
+            $this->ticket->user->notify(new TicketStatusChanged($this->ticket, $oldStatus, 'diproses'));
+        }
 
         session()->flash('message', 'Anda telah mengambil alih tiket ini.');
     }
@@ -72,6 +80,7 @@ class TicketShow extends Component
             abort(403);
         }
 
+        $oldStatus = $this->ticket->status;
         $updateData = ['status' => $this->status];
 
         // Jika status diubah ke selesai/ditutup, isi closed_at untuk SLA
@@ -86,6 +95,11 @@ class TicketShow extends Component
 
         $this->ticket->update($updateData);
         $this->ticket = $this->ticket->fresh();
+
+        // Kirim notifikasi email ke pelapor jika status berubah
+        if ($oldStatus !== $this->status) {
+            $this->ticket->user->notify(new TicketStatusChanged($this->ticket, $oldStatus, $this->status));
+        }
 
         session()->flash('message', 'Status tiket berhasil diubah menjadi: ' . ucfirst($this->status));
     }

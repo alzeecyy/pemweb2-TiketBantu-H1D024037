@@ -4,7 +4,7 @@ use App\Livewire\TicketIndex;
 use App\Livewire\TicketCreate;
 use App\Livewire\TicketShow;
 
-Route::view('/', 'welcome');
+Route::redirect('/', 'tickets');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])

@@ -125,58 +125,62 @@
             @if($canSort)
                 x-data
                 x-init="
-                    Sortable.create($el, {
-                        handle: '.sort-handle',
-                        animation: 250,
-                        ghostClass: 'opacity-30',
-                        chosenClass: 'scale-105',
-                        dragClass: 'shadow-2xl',
-                        onEnd: function(evt) {
-                            let items = [];
-                            $el.querySelectorAll('[data-sort-id]').forEach(function(el, index) {
-                                items.push({ value: el.dataset.sortId, order: index + 1 });
+                    const initSortable = () => {
+                        if (typeof Sortable !== 'undefined') {
+                            Sortable.create($el, {
+                                handle: '.sort-handle',
+                                animation: 250,
+                                ghostClass: 'opacity-30',
+                                chosenClass: 'scale-105',
+                                dragClass: 'shadow-2xl',
+                                onEnd: function(evt) {
+                                    let items = [];
+                                    $el.querySelectorAll('[data-sort-id]').forEach(function(el, index) {
+                                        items.push({ value: el.dataset.sortId, order: index + 1 });
+                                    });
+                                    $wire.handleSort(items);
+                                }
                             });
-                            $wire.handleSort(items);
+                        } else {
+                            setTimeout(initSortable, 50);
                         }
-                    })
+                    };
+                    initSortable();
                 "
             @endif
+            wire:key="ticket-grid-{{ $tickets->pluck('id')->join('-') }}"
             class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
         >
             @foreach($tickets as $ticket)
                 @php
-                    // Map styles according to status
-                    $bgColor = 'bg-red-500';
-                    $neonGlow = 'neon-glow-red';
-                    $bannerText = 'LATEST REQUEST';
-                    $statusLabelColor = 'text-red-500';
-
-                    if ($ticket->status === 'diproses') {
-                        $bgColor = 'bg-blue-500';
-                        $neonGlow = 'neon-glow-blue';
-                        $bannerText = 'CURRENTLY HANDLING';
-                        $statusLabelColor = 'text-blue-500';
-                    } elseif ($ticket->status === 'selesai') {
-                        $bgColor = 'bg-green-500';
-                        $neonGlow = 'neon-glow-green';
-                        $bannerText = 'SUCCESSFULLY SOLVED';
-                        $statusLabelColor = 'text-green-500';
-                    } elseif ($ticket->status === 'ditutup') {
-                        $bgColor = 'bg-gray-500';
-                        $neonGlow = 'neon-glow-gray';
-                        $bannerText = 'CLOSED TICKET';
-                        $statusLabelColor = 'text-gray-500';
+                    // Map styles according to priority
+                    if ($ticket->priority === 'high') {
+                        $bgColor = 'bg-red-500';
+                        $neonGlow = 'neon-glow-red';
+                        $bannerText = 'URGENT TICKET';
+                        $statusLabelColor = 'text-red-500';
+                    } elseif ($ticket->priority === 'medium') {
+                        $bgColor = 'bg-orange-500';
+                        $neonGlow = 'neon-glow-orange';
+                        $bannerText = 'MEDIUM TICKET';
+                        $statusLabelColor = 'text-orange-500';
+                    } else { // low
+                        $bgColor = 'bg-yellow-500';
+                        $neonGlow = 'neon-glow-yellow';
+                        $bannerText = 'LOW TICKET';
+                        $statusLabelColor = 'text-yellow-500';
                     }
                 @endphp
                 
                 <div 
                     wire:key="ticket-{{ $ticket->id }}"
                     data-sort-id="{{ $ticket->id }}"
-                    class="relative glass-card ticket-pass p-0 overflow-hidden hover:scale-[1.03] transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10"
+                    x-data
+                    x-on:click="if (!$event.target.closest('a, button, .sort-handle')) { Livewire.navigate('{{ route('tickets.show', $ticket->id) }}') }"
+                    class="relative glass-card ticket-pass p-0 overflow-hidden cursor-pointer hover:scale-[1.03] transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10"
                 >
-                    <a href="{{ route('tickets.show', $ticket->id) }}" wire:navigate class="absolute inset-0 z-0" title="Lihat Detail"></a>
-                    <div class="p-6 relative z-10 pointer-events-none">
-                        <div class="flex justify-between items-start mb-6 pointer-events-auto">
+                    <div class="p-6 relative z-10">
+                        <div class="flex justify-between items-start mb-6">
                             <div class="space-y-1">
                                 <p class="text-[10px] uppercase font-bold tracking-[0.2em] {{ $statusLabelColor }}">TICKET-ID</p>
                                 <h3 class="text-xl font-black text-on-surface">#TKT-{{ str_pad($ticket->id, 5, '0', STR_PAD_LEFT) }}</h3>
@@ -205,7 +209,7 @@
                         </div>
 
                         <!-- Reporter & Ticket Title Info -->
-                        <div class="flex items-center gap-4 mb-8 pointer-events-auto">
+                        <div class="flex items-center gap-4 mb-8">
                             <div class="w-12 h-12 rounded-full border-2 border-white shadow-md bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-black text-xs shrink-0">
                                 {{ strtoupper(substr($ticket->user->name, 0, 2)) }}
                             </div>
@@ -238,7 +242,7 @@
                         </div>
 
                         <!-- Card Action Buttons -->
-                        <div class="flex items-center justify-between border-t border-outline-variant/10 pt-4 pb-12 pointer-events-auto">
+                        <div class="flex items-center justify-between border-t border-outline-variant/10 pt-4 pb-12">
                             <a href="{{ route('tickets.show', $ticket->id) }}" wire:navigate class="inline-flex items-center gap-1 text-xs font-black text-primary hover:text-primary-container transition-colors uppercase tracking-wider">
                                 <span class="material-symbols-outlined text-sm">visibility</span> Detail
                             </a>

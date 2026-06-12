@@ -111,6 +111,8 @@
 .neon-glow-gray { box-shadow: 0 0 15px rgba(96, 72, 104, 0.3); }
 .neon-glow-red { box-shadow: 0 0 15px rgba(229, 62, 62, 0.4); }
 .neon-glow-green { box-shadow: 0 0 15px rgba(34, 197, 94, 0.4); }
+.neon-glow-orange { box-shadow: 0 0 15px rgba(249, 115, 22, 0.4); }
+.neon-glow-yellow { box-shadow: 0 0 15px rgba(234, 179, 8, 0.4); }
 
 .animate-bounce-short {
     animation: bounce-short 1s infinite;

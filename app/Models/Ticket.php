@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 #[Fillable(['title', 'description', 'priority', 'status', 'category_id', 'user_id', 'agent_id', 'sort_order', 'closed_at'])]
 class Ticket extends Model
 {
+    protected $casts = [
+        'closed_at' => 'datetime',
+    ];
+
     /**
      * Kategori dari tiket ini.
      */

@@ -61,6 +61,16 @@
                 </div>
             </div>
 
+            {{-- Info drag-and-drop untuk admin/agent --}}
+            @if($canSort)
+                <div class="mb-4 flex items-center gap-2 text-xs text-indigo-600 bg-indigo-50 border border-indigo-200 rounded-lg px-4 py-2.5">
+                    <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                    </svg>
+                    <span><strong>Drag & Drop:</strong> Seret baris tiket menggunakan ikon ⠿ di kolom paling kiri untuk mengurutkan prioritas penanganan.</span>
+                </div>
+            @endif
+
             <!-- Tickets List Table -->
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
@@ -73,6 +83,11 @@
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-50">
                                     <tr>
+                                        @if($canSort)
+                                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider w-10">
+                                                <span class="sr-only">Urutkan</span>
+                                            </th>
+                                        @endif
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Judul / ID</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pelapor</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kategori</th>
@@ -85,9 +100,23 @@
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody class="bg-white divide-y divide-gray-200">
+                                {{-- wire:sort pada tbody — Tantangan Khusus Livewire 4 --}}
+                                <tbody
+                                    @if($canSort) wire:sort="handleSort" @endif
+                                    class="bg-white divide-y divide-gray-200"
+                                >
                                     @foreach($tickets as $ticket)
-                                        <tr class="hover:bg-gray-50">
+                                        <tr
+                                            wire:key="ticket-{{ $ticket->id }}"
+                                            @if($canSort) wire:sort:item="{{ $ticket->id }}" @endif
+                                            class="hover:bg-gray-50 {{ $canSort ? 'cursor-grab active:cursor-grabbing' : '' }} transition-colors duration-150"
+                                        >
+                                            {{-- Drag Handle (hanya admin/agent) --}}
+                                            @if($canSort)
+                                                <td class="px-3 py-4 text-center text-gray-400 hover:text-indigo-500 transition-colors">
+                                                    <span class="text-lg leading-none select-none" title="Seret untuk mengurutkan">⠿</span>
+                                                </td>
+                                            @endif
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 <div class="text-sm font-semibold text-gray-900">
                                                     <a href="{{ route('tickets.show', $ticket->id) }}" wire:navigate class="hover:text-indigo-600 hover:underline">
@@ -161,3 +190,4 @@
         </div>
     </div>
 </div>
+

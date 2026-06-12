@@ -22,6 +22,32 @@ class TicketIndex extends Component
     public function updatingPriority() { $this->resetPage(); }
     public function updatingCategoryId() { $this->resetPage(); }
 
+    /**
+     * Cek apakah user saat ini bisa melakukan drag-and-drop sort.
+     * Hanya admin dan agent yang bisa mengurutkan tiket.
+     */
+    public function canSort(): bool
+    {
+        return in_array(auth()->user()->role, ['admin', 'agent']);
+    }
+
+    /**
+     * Tantangan Khusus Livewire 4: wire:sort drag-and-drop
+     * Menerima array urutan baru dari frontend dan menyimpannya ke database.
+     */
+    public function handleSort($items)
+    {
+        // Hanya admin/agent yang boleh mengurutkan
+        if (! $this->canSort()) {
+            return;
+        }
+
+        foreach ($items as $item) {
+            Ticket::where('id', $item['value'])
+                ->update(['sort_order' => $item['order']]);
+        }
+    }
+
     public function render()
     {
         $user = auth()->user();
@@ -73,6 +99,7 @@ class TicketIndex extends Component
         return view('livewire.ticket-index', [
             'tickets' => $tickets,
             'categories' => $categories,
+            'canSort' => $this->canSort(),
         ])->layout('layouts.app');
     }
 }

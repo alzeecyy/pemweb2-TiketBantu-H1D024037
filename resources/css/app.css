@@ -18,7 +18,7 @@
     width: 900px;
     height: 900px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(224, 64, 160, 0.20) 0%, rgba(224, 64, 160, 0) 70%);
+    background: radial-gradient(circle, rgba(224, 64, 160, 0.35) 0%, rgba(224, 64, 160, 0) 70%);
     z-index: -2;
     top: -200px;
     left: -200px;
@@ -31,7 +31,7 @@
     width: 900px;
     height: 900px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(0, 150, 204, 0.15) 0%, rgba(0, 150, 204, 0) 70%);
+    background: radial-gradient(circle, rgba(0, 150, 204, 0.28) 0%, rgba(0, 150, 204, 0) 70%);
     z-index: -2;
     bottom: -200px;
     right: -200px;
@@ -43,7 +43,7 @@
     width: 800px;
     height: 800px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(124, 82, 170, 0.16) 0%, rgba(124, 82, 170, 0) 70%);
+    background: radial-gradient(circle, rgba(124, 82, 170, 0.30) 0%, rgba(124, 82, 170, 0) 70%);
     z-index: -2;
     top: 35%;
     left: 35%;
@@ -70,15 +70,15 @@
 }
 
 .glass-card {
-    background: rgba(255, 255, 255, 0.45) !important;
-    backdrop-filter: blur(24px) saturate(220%) !important;
-    -webkit-backdrop-filter: blur(24px) saturate(220%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.65) !important;
+    background: rgba(255, 255, 255, 0.20) !important;
+    backdrop-filter: blur(30px) saturate(220%) !important;
+    -webkit-backdrop-filter: blur(30px) saturate(220%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.45) !important;
     box-shadow:
-        0 16px 40px -10px rgba(124, 82, 170, 0.12),
-        inset 0 1.5px 0 0 rgba(255, 255, 255, 0.8),
-        inset 0 -1px 0 0 rgba(255, 255, 255, 0.15),
-        0 4px 12px 0 rgba(224, 64, 160, 0.05) !important;
+        0 24px 64px -12px rgba(124, 82, 170, 0.14),
+        inset 0 2px 0 0 rgba(255, 255, 255, 0.8),
+        inset 0 -1.5px 0 0 rgba(255, 255, 255, 0.2),
+        0 8px 24px 0 rgba(224, 64, 160, 0.06) !important;
 }
 
 .glass-card-hover {
@@ -86,14 +86,14 @@
 }
 
 .glass-card-hover:hover {
-    background: rgba(255, 255, 255, 0.52) !important;
-    border-color: rgba(255, 255, 255, 0.8) !important;
+    background: rgba(255, 255, 255, 0.28) !important;
+    border-color: rgba(255, 255, 255, 0.60) !important;
     box-shadow:
-        0 20px 48px -8px rgba(124, 82, 170, 0.18),
-        inset 0 1.5px 0 0 rgba(255, 255, 255, 0.9),
-        inset 0 -1px 0 0 rgba(255, 255, 255, 0.20),
-        0 6px 16px 0 rgba(224, 64, 160, 0.08) !important;
-    transform: translateY(-2px);
+        0 32px 80px -10px rgba(124, 82, 170, 0.22),
+        inset 0 2px 0 0 rgba(255, 255, 255, 0.9),
+        inset 0 -1.5px 0 0 rgba(255, 255, 255, 0.25),
+        0 12px 32px 0 rgba(224, 64, 160, 0.10) !important;
+    transform: translateY(-4px);
 }
 
 .ticket-pass {

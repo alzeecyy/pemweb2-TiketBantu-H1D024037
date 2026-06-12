@@ -1,193 +1,271 @@
 <div>
-    <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Tiket Pengaduan') }}
-            </h2>
-            @if(auth()->user()->role === 'user' || auth()->user()->role === 'admin')
-                <a href="{{ route('tickets.create') }}" wire:navigate class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                    + Buat Tiket Baru
-                </a>
-            @endif
-        </div>
-    </x-slot>
+    <!-- Floating FAB to Create Ticket -->
+    @if(auth()->user()->role === 'user' || auth()->user()->role === 'admin')
+        <a href="{{ route('tickets.create') }}" wire:navigate class="fixed bottom-8 right-8 w-16 h-16 bg-primary text-white rounded-full shadow-2xl shadow-primary/40 flex items-center justify-center group hover:scale-110 active:scale-95 transition-all z-40">
+            <span class="material-symbols-outlined text-3xl group-hover:rotate-90 transition-transform duration-300">add</span>
+        </a>
+    @endif
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <!-- Filter & Search Card -->
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
-                <div class="p-6 text-gray-900">
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                        <!-- Search Input -->
-                        <div>
-                            <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Cari Tiket</label>
-                            <input wire:model.live.debounce.300ms="search" type="text" id="search" placeholder="Cari judul, deskripsi, pelapor..." class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                        </div>
+    <!-- Headline Section -->
+    <div class="mb-12">
+        <h2 class="text-4xl md:text-6xl font-black text-on-surface font-display tracking-tight leading-tight">
+            Daftar Tiket <span class="text-primary italic">Pengaduan</span>
+        </h2>
+        <p class="text-on-surface-variant mt-4 text-lg max-w-2xl font-medium">
+            Pantau dan kelola semua tiket bantuan pelanggan dengan sistem manajemen futuristik <span class="text-secondary font-bold">TiketBantu</span>.
+        </p>
+    </div>
 
-                        <!-- Category Filter -->
-                        <div>
-                            <label for="category" class="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
-                            <select wire:model.live="category_id" id="category" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                <option value="">Semua Kategori</option>
-                                @foreach($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <!-- Priority Filter -->
-                        <div>
-                            <label for="priority" class="block text-sm font-medium text-gray-700 mb-1">Prioritas</label>
-                            <select wire:model.live="priority" id="priority" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                <option value="">Semua Prioritas</option>
-                                <option value="low">Low</option>
-                                <option value="medium">Medium</option>
-                                <option value="high">High</option>
-                            </select>
-                        </div>
-
-                        <!-- Status Filter -->
-                        <div>
-                            <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                            <select wire:model.live="status" id="status" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                <option value="">Semua Status</option>
-                                <option value="baru">Baru</option>
-                                <option value="diproses">Diproses</option>
-                                <option value="selesai">Selesai</option>
-                                <option value="ditutup">Ditutup</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
+    <!-- Bento Stat Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <!-- Tiket Baru -->
+        <div class="glass-card p-6 rounded-lg flex flex-col justify-between h-48 group hover:scale-[1.02] transition-all duration-300 border-t-4 border-t-primary">
+            <span class="material-symbols-outlined text-primary text-3xl">inbox</span>
+            <div>
+                <p class="text-5xl font-black text-on-surface mb-1">{{ $baruCount }}</p>
+                <p class="text-sm font-bold text-on-surface-variant uppercase tracking-widest">Tiket Baru</p>
             </div>
+        </div>
 
-            {{-- Info drag-and-drop untuk admin/agent --}}
-            @if($canSort)
-                <div class="mb-4 flex items-center gap-2 text-xs text-indigo-600 bg-indigo-50 border border-indigo-200 rounded-lg px-4 py-2.5">
-                    <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
-                    </svg>
-                    <span><strong>Drag & Drop:</strong> Seret baris tiket menggunakan ikon ⠿ di kolom paling kiri untuk mengurutkan prioritas penanganan.</span>
-                </div>
-            @endif
+        <!-- Dalam Proses -->
+        <div class="glass-card p-6 rounded-lg flex flex-col justify-between h-48 group hover:scale-[1.02] transition-all duration-300 border-t-4 border-t-tertiary">
+            <span class="material-symbols-outlined text-tertiary text-3xl">pending_actions</span>
+            <div>
+                <p class="text-5xl font-black text-on-surface mb-1">{{ $prosesCount }}</p>
+                <p class="text-sm font-bold text-on-surface-variant uppercase tracking-widest">Dalam Proses</p>
+            </div>
+        </div>
 
-            <!-- Tickets List Table -->
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    @if($tickets->isEmpty())
-                        <div class="text-center py-8 text-gray-500">
-                            Tidak ada tiket pengaduan ditemukan.
-                        </div>
-                    @else
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200">
-                                <thead class="bg-gray-50">
-                                    <tr>
-                                        @if($canSort)
-                                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider w-10">
-                                                <span class="sr-only">Urutkan</span>
-                                            </th>
-                                        @endif
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Judul / ID</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pelapor</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kategori</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prioritas</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Agen</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
-                                        <th scope="col" class="relative px-6 py-3">
-                                            <span class="sr-only">Aksi</span>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                {{-- wire:sort pada tbody — Tantangan Khusus Livewire 4 --}}
-                                <tbody
-                                    @if($canSort) wire:sort="handleSort" @endif
-                                    class="bg-white divide-y divide-gray-200"
-                                >
-                                    @foreach($tickets as $ticket)
-                                        <tr
-                                            wire:key="ticket-{{ $ticket->id }}"
-                                            @if($canSort) wire:sort:item="{{ $ticket->id }}" @endif
-                                            class="hover:bg-gray-50 {{ $canSort ? 'cursor-grab active:cursor-grabbing' : '' }} transition-colors duration-150"
-                                        >
-                                            {{-- Drag Handle (hanya admin/agent) --}}
-                                            @if($canSort)
-                                                <td class="px-3 py-4 text-center text-gray-400 hover:text-indigo-500 transition-colors">
-                                                    <span class="text-lg leading-none select-none" title="Seret untuk mengurutkan">⠿</span>
-                                                </td>
-                                            @endif
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="text-sm font-semibold text-gray-900">
-                                                    <a href="{{ route('tickets.show', $ticket->id) }}" wire:navigate class="hover:text-indigo-600 hover:underline">
-                                                        {{ $ticket->title }}
-                                                    </a>
-                                                </div>
-                                                <div class="text-xs text-gray-500">#TKT-{{ str_pad($ticket->id, 5, '0', STR_PAD_LEFT) }}</div>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="text-sm text-gray-900">{{ $ticket->user->name }}</div>
-                                                <div class="text-xs text-gray-500">{{ $ticket->user->email }}</div>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {{ $ticket->category->name }}
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <!-- Client-side directive requirement: menggunakan x-show / wire:show / wire:text jika diperlukan.
-                                                     Kita gunakan perpaduan standar Alpine untuk merender dynamic badge -->
-                                                <div x-data="{ priority: '{{ $ticket->priority }}' }">
-                                                    <span x-show="priority === 'high'" class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                                        High
-                                                    </span>
-                                                    <span x-show="priority === 'medium'" class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                                        Medium
-                                                    </span>
-                                                    <span x-show="priority === 'low'" class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
-                                                        Low
-                                                    </span>
-                                                </div>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <div x-data="{ status: '{{ $ticket->status }}' }">
-                                                    <span x-show="status === 'baru'" class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                                                        Baru
-                                                    </span>
-                                                    <span x-show="status === 'diproses'" class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-orange-100 text-orange-800">
-                                                        Diproses
-                                                    </span>
-                                                    <span x-show="status === 'selesai'" class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                        Selesai
-                                                    </span>
-                                                    <span x-show="status === 'ditutup'" class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-200 text-gray-850">
-                                                        Ditutup
-                                                    </span>
-                                                </div>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                @if($ticket->agent)
-                                                    <span class="text-gray-900 font-medium">{{ $ticket->agent->name }}</span>
-                                                @else
-                                                    <span class="text-xs text-red-500 italic font-medium">Belum Ditugaskan</span>
-                                                @endif
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {{ $ticket->created_at->format('d M Y, H:i') }}
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                <a href="{{ route('tickets.show', $ticket->id) }}" wire:navigate class="text-indigo-600 hover:text-indigo-900">Detail</a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="mt-4">
-                            {{ $tickets->links() }}
-                        </div>
-                    @endif
-                </div>
+        <!-- Selesai -->
+        <div class="glass-card p-6 rounded-lg flex flex-col justify-between h-48 group hover:scale-[1.02] transition-all duration-300 border-t-4 border-t-secondary">
+            <span class="material-symbols-outlined text-secondary text-3xl">verified</span>
+            <div>
+                <p class="text-5xl font-black text-on-surface mb-1">{{ $selesaiCount }}</p>
+                <p class="text-sm font-bold text-on-surface-variant uppercase tracking-widest">Selesai</p>
+            </div>
+        </div>
+
+        <!-- SLA Success Rate -->
+        <div class="relative overflow-hidden p-6 rounded-lg flex flex-col justify-between h-48 bg-primary text-white shadow-xl shadow-primary/30 group hover:scale-[1.02] transition-all duration-300">
+            <div class="absolute -right-4 -top-4 opacity-20 group-hover:rotate-12 transition-transform duration-500">
+                <span class="material-symbols-outlined text-9xl">auto_awesome</span>
+            </div>
+            <span class="material-symbols-outlined text-3xl">speed</span>
+            <div>
+                <p class="text-4xl font-black mb-1">{{ $slaSuccess }}%</p>
+                <p class="text-sm font-bold uppercase tracking-widest opacity-90">SLA Success</p>
             </div>
         </div>
     </div>
-</div>
 
+    <!-- Filter & Search Card -->
+    <div class="glass-card rounded-2xl p-6 mb-8 shadow-lg border border-outline-variant/20">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <!-- Search Input -->
+            <div>
+                <label for="search" class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Cari Tiket</label>
+                <div class="flex items-center bg-surface-container-low rounded-lg px-3 py-1.5 border border-outline-variant/30 focus-within:ring-2 focus-within:ring-primary focus-within:border-transparent transition-all">
+                    <span class="material-symbols-outlined text-on-surface-variant text-sm mr-2">search</span>
+                    <input wire:model.live.debounce.300ms="search" type="text" id="search" placeholder="Cari judul, deskripsi, pelapor..." class="bg-transparent border-none focus:ring-0 text-sm w-full placeholder:text-on-surface-variant/40">
+                </div>
+            </div>
+
+            <!-- Category Filter -->
+            <div>
+                <label for="category" class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Kategori</label>
+                <select wire:model.live="category_id" id="category" class="w-full rounded-lg border-outline-variant/30 bg-surface-container-low text-sm focus:ring-primary focus:border-primary transition-all">
+                    <option value="">Semua Kategori</option>
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Priority Filter -->
+            <div>
+                <label for="priority" class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Prioritas</label>
+                <select wire:model.live="priority" id="priority" class="w-full rounded-lg border-outline-variant/30 bg-surface-container-low text-sm focus:ring-primary focus:border-primary transition-all">
+                    <option value="">Semua Prioritas</option>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+            </div>
+
+            <!-- Status Filter -->
+            <div>
+                <label for="status" class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Status</label>
+                <select wire:model.live="status" id="status" class="w-full rounded-lg border-outline-variant/30 bg-surface-container-low text-sm focus:ring-primary focus:border-primary transition-all">
+                    <option value="">Semua Status</option>
+                    <option value="baru">Baru</option>
+                    <option value="diproses">Diproses</option>
+                    <option value="selesai">Selesai</option>
+                    <option value="ditutup">Ditutup</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    {{-- Info drag-and-drop untuk admin/agent --}}
+    @if($canSort)
+        <div class="mb-6 flex items-center gap-2 text-xs text-primary bg-primary-fixed/20 border border-primary-fixed-dim/30 rounded-xl px-4 py-3">
+            <span class="material-symbols-outlined text-sm">info</span>
+            <span><strong>Drag & Drop:</strong> Seret kartu tiket menggunakan ikon ⠿ di bagian pojok kanan atas kartu untuk mengurutkan prioritas penanganan.</span>
+        </div>
+    @endif
+
+    <!-- Ticket Grid: Boarding Pass Style -->
+    @if($tickets->isEmpty())
+        <div class="glass-card text-center py-12 rounded-2xl shadow border border-outline-variant/20">
+            <span class="material-symbols-outlined text-5xl text-on-surface-variant/40 mb-2">inbox</span>
+            <p class="text-on-surface-variant font-medium">Tidak ada tiket pengaduan ditemukan.</p>
+        </div>
+    @else
+        <div 
+            @if($canSort)
+                x-data
+                x-init="
+                    Sortable.create($el, {
+                        handle: '.sort-handle',
+                        animation: 250,
+                        ghostClass: 'opacity-30',
+                        chosenClass: 'scale-105',
+                        dragClass: 'shadow-2xl',
+                        onEnd: function(evt) {
+                            let items = [];
+                            $el.querySelectorAll('[data-sort-id]').forEach(function(el, index) {
+                                items.push({ value: el.dataset.sortId, order: index + 1 });
+                            });
+                            $wire.handleSort(items);
+                        }
+                    })
+                "
+            @endif
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
+            @foreach($tickets as $ticket)
+                @php
+                    // Map styles according to status
+                    $bgColor = 'bg-red-500';
+                    $neonGlow = 'neon-glow-red';
+                    $bannerText = 'LATEST REQUEST';
+                    $statusLabelColor = 'text-red-500';
+
+                    if ($ticket->status === 'diproses') {
+                        $bgColor = 'bg-blue-500';
+                        $neonGlow = 'neon-glow-blue';
+                        $bannerText = 'CURRENTLY HANDLING';
+                        $statusLabelColor = 'text-blue-500';
+                    } elseif ($ticket->status === 'selesai') {
+                        $bgColor = 'bg-green-500';
+                        $neonGlow = 'neon-glow-green';
+                        $bannerText = 'SUCCESSFULLY SOLVED';
+                        $statusLabelColor = 'text-green-500';
+                    } elseif ($ticket->status === 'ditutup') {
+                        $bgColor = 'bg-gray-500';
+                        $neonGlow = 'neon-glow-gray';
+                        $bannerText = 'CLOSED TICKET';
+                        $statusLabelColor = 'text-gray-500';
+                    }
+                @endphp
+                
+                <div 
+                    wire:key="ticket-{{ $ticket->id }}"
+                    data-sort-id="{{ $ticket->id }}"
+                    class="relative glass-card ticket-pass p-0 overflow-hidden hover:scale-[1.03] transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10"
+                >
+                    <a href="{{ route('tickets.show', $ticket->id) }}" wire:navigate class="absolute inset-0 z-0" title="Lihat Detail"></a>
+                    <div class="p-6 relative z-10 pointer-events-none">
+                        <div class="flex justify-between items-start mb-6 pointer-events-auto">
+                            <div class="space-y-1">
+                                <p class="text-[10px] uppercase font-bold tracking-[0.2em] {{ $statusLabelColor }}">TICKET-ID</p>
+                                <h3 class="text-xl font-black text-on-surface">#TKT-{{ str_pad($ticket->id, 5, '0', STR_PAD_LEFT) }}</h3>
+                            </div>
+                            
+                            <div class="flex items-center gap-2">
+                                <!-- Client-side directive: menggunakan Livewire wire:show untuk prioritas -->
+                                <div class="flex gap-1">
+                                    <div x-show="'{{ $ticket->priority }}' === 'high'" class="bg-primary-fixed text-on-primary-fixed-variant px-3 py-1 rounded-full text-[10px] font-black uppercase">
+                                        Urgent
+                                    </div>
+                                    <div x-show="'{{ $ticket->priority }}' === 'medium'" class="bg-tertiary-fixed text-on-tertiary-fixed-variant px-3 py-1 rounded-full text-[10px] font-black uppercase">
+                                        Medium
+                                    </div>
+                                    <div x-show="'{{ $ticket->priority }}' === 'low'" class="bg-surface-variant text-on-surface-variant px-3 py-1 rounded-full text-[10px] font-black uppercase">
+                                        Low
+                                    </div>
+                                </div>
+                                
+                                @if($canSort)
+                                    <div class="sort-handle cursor-grab active:cursor-grabbing text-on-surface-variant/40 hover:text-primary transition-colors text-lg" title="Seret untuk mengurutkan" @click.prevent>
+                                        ⠿
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+
+                        <!-- Reporter & Ticket Title Info -->
+                        <div class="flex items-center gap-4 mb-8 pointer-events-auto">
+                            <div class="w-12 h-12 rounded-full border-2 border-white shadow-md bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-black text-xs shrink-0">
+                                {{ strtoupper(substr($ticket->user->name, 0, 2)) }}
+                            </div>
+                            <div class="min-w-0">
+                                <p class="font-black text-on-surface leading-tight truncate">{{ $ticket->user->name }}</p>
+                                <p class="text-xs text-on-surface-variant font-medium truncate">
+                                    <a href="{{ route('tickets.show', $ticket->id) }}" wire:navigate class="hover:underline hover:text-primary transition-colors">
+                                        {{ $ticket->title }}
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Details Section -->
+                        <div class="flex justify-between border-t border-dashed border-outline-variant pt-6 pb-4">
+                            <div>
+                                <p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">Dibuat Pada</p>
+                                <p class="text-sm font-bold">{{ $ticket->created_at->format('d M, H:i') }}</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">Status</p>
+                                <!-- Client-side directive: menggunakan Livewire wire:show untuk status -->
+                                <div class="flex justify-end">
+                                    <span x-show="'{{ $ticket->status }}' === 'baru'" class="text-sm font-black text-error">Baru</span>
+                                    <span x-show="'{{ $ticket->status }}' === 'diproses'" class="text-sm font-black text-tertiary">Diproses</span>
+                                    <span x-show="'{{ $ticket->status }}' === 'selesai'" class="text-sm font-black text-success">Selesai</span>
+                                    <span x-show="'{{ $ticket->status }}' === 'ditutup'" class="text-sm font-black text-on-surface-variant">Ditutup</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card Action Buttons -->
+                        <div class="flex items-center justify-between border-t border-outline-variant/10 pt-4 pb-12 pointer-events-auto">
+                            <a href="{{ route('tickets.show', $ticket->id) }}" wire:navigate class="inline-flex items-center gap-1 text-xs font-black text-primary hover:text-primary-container transition-colors uppercase tracking-wider">
+                                <span class="material-symbols-outlined text-sm">visibility</span> Detail
+                            </a>
+                            
+                            @if(
+                                auth()->user()->role === 'admin' ||
+                                (auth()->user()->role === 'agent' && (is_null($ticket->agent_id) || $ticket->agent_id === auth()->id())) ||
+                                (auth()->user()->role === 'user' && $ticket->user_id === auth()->id() && $ticket->status === 'baru')
+                            )
+                                <a href="{{ route('tickets.edit', $ticket->id) }}" wire:navigate class="inline-flex items-center gap-1 text-xs font-black text-secondary hover:text-secondary-container transition-colors uppercase tracking-wider">
+                                    <span class="material-symbols-outlined text-sm">edit</span> Ubah
+                                </a>
+                            @endif
+                        </div>
+                    </div>
+
+                    <!-- Bottom Status Banner -->
+                    <div class="absolute bottom-0 left-0 w-full h-6 {{ $bgColor }} {{ $neonGlow }} flex items-center justify-center">
+                        <span class="text-[10px] font-black text-white uppercase tracking-[0.5em]">{{ $bannerText }}</span>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+
+        <!-- Pagination -->
+        <div class="mt-8">
+            {{ $tickets->links() }}
+        </div>
+    @endif
+</div>

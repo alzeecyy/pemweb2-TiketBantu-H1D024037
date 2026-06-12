@@ -157,17 +157,17 @@
                     if ($ticket->priority === 'high') {
                         $bgColor = 'bg-red-500';
                         $neonGlow = 'neon-glow-red';
-                        $bannerText = 'URGENT TICKET';
+                        $bannerText = 'URGENT';
                         $statusLabelColor = 'text-red-500';
                     } elseif ($ticket->priority === 'medium') {
                         $bgColor = 'bg-orange-500';
                         $neonGlow = 'neon-glow-orange';
-                        $bannerText = 'MEDIUM TICKET';
+                        $bannerText = 'MEDIUM';
                         $statusLabelColor = 'text-orange-500';
                     } else { // low
                         $bgColor = 'bg-yellow-500';
                         $neonGlow = 'neon-glow-yellow';
-                        $bannerText = 'LOW TICKET';
+                        $bannerText = 'LOW';
                         $statusLabelColor = 'text-yellow-500';
                     }
                 @endphp
@@ -189,13 +189,13 @@
                             <div class="flex items-center gap-2">
                                 <!-- Client-side directive: menggunakan Livewire wire:show untuk prioritas -->
                                 <div class="flex gap-1">
-                                    <div x-show="'{{ $ticket->priority }}' === 'high'" class="bg-primary-fixed text-on-primary-fixed-variant px-3 py-1 rounded-full text-[10px] font-black uppercase">
+                                    <div x-show="'{{ $ticket->priority }}' === 'high'" class="bg-red-500 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase">
                                         Urgent
                                     </div>
-                                    <div x-show="'{{ $ticket->priority }}' === 'medium'" class="bg-tertiary-fixed text-on-tertiary-fixed-variant px-3 py-1 rounded-full text-[10px] font-black uppercase">
+                                    <div x-show="'{{ $ticket->priority }}' === 'medium'" class="bg-orange-500 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase">
                                         Medium
                                     </div>
-                                    <div x-show="'{{ $ticket->priority }}' === 'low'" class="bg-surface-variant text-on-surface-variant px-3 py-1 rounded-full text-[10px] font-black uppercase">
+                                    <div x-show="'{{ $ticket->priority }}' === 'low'" class="bg-yellow-500 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase">
                                         Low
                                     </div>
                                 </div>

@@ -1,7 +1,7 @@
 <div>
     <!-- Floating FAB to Create Ticket -->
     @if(auth()->user()->role === 'user' || auth()->user()->role === 'admin')
-        <a href="{{ route('tickets.create') }}" wire:navigate class="fixed bottom-8 right-8 w-16 h-16 bg-primary text-white rounded-full shadow-2xl shadow-primary/40 flex items-center justify-center group hover:scale-110 active:scale-95 transition-all z-40">
+        <a href="{{ route('tickets.create') }}" class="fixed bottom-8 right-8 w-16 h-16 bg-primary text-white rounded-full shadow-2xl shadow-primary/40 flex items-center justify-center group hover:scale-110 active:scale-95 transition-all z-40">
             <span class="material-symbols-outlined text-3xl group-hover:rotate-90 transition-transform duration-300">add</span>
         </a>
     @endif
@@ -12,7 +12,7 @@
             Daftar Tiket <span class="text-primary italic">Pengaduan</span>
         </h2>
         <p class="text-on-surface-variant mt-4 text-lg max-w-2xl font-medium">
-            Pantau dan kelola semua tiket bantuan pelanggan dengan sistem manajemen futuristik <span class="text-secondary font-bold">TiketBantu</span>.
+            Solusi terpercaya untuk setiap aduan Anda.
         </p>
     </div>
 
@@ -123,30 +123,7 @@
     @else
         <div 
             @if($canSort)
-                x-data
-                x-init="
-                    const initSortable = () => {
-                        if (typeof Sortable !== 'undefined') {
-                            Sortable.create($el, {
-                                handle: '.sort-handle',
-                                animation: 250,
-                                ghostClass: 'opacity-30',
-                                chosenClass: 'scale-105',
-                                dragClass: 'shadow-2xl',
-                                onEnd: function(evt) {
-                                    let items = [];
-                                    $el.querySelectorAll('[data-sort-id]').forEach(function(el, index) {
-                                        items.push({ value: el.dataset.sortId, order: index + 1 });
-                                    });
-                                    $wire.handleSort(items);
-                                }
-                            });
-                        } else {
-                            setTimeout(initSortable, 50);
-                        }
-                    };
-                    initSortable();
-                "
+                wire:sortable="handleSort"
             @endif
             wire:key="ticket-grid-{{ $tickets->pluck('id')->join('-') }}"
             class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
@@ -174,9 +151,11 @@
                 
                 <div 
                     wire:key="ticket-{{ $ticket->id }}"
-                    data-sort-id="{{ $ticket->id }}"
+                    @if($canSort)
+                        wire:sortable.item="{{ $ticket->id }}"
+                    @endif
                     x-data
-                    x-on:click="if (!$event.target.closest('a, button, .sort-handle')) { Livewire.navigate('{{ route('tickets.show', $ticket->id) }}') }"
+                    x-on:click="if (!$event.target.closest('a, button, [wire\:sortable\.handle]')) { Livewire.navigate('{{ route('tickets.show', $ticket->id) }}') }"
                     class="relative glass-card ticket-pass p-0 overflow-hidden cursor-pointer hover:scale-[1.03] transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10"
                 >
                     <div class="p-6 relative z-10">
@@ -187,21 +166,24 @@
                             </div>
                             
                             <div class="flex items-center gap-2">
-                                <!-- Client-side directive: menggunakan Livewire wire:show untuk prioritas -->
                                 <div class="flex gap-1">
-                                    <div x-show="'{{ $ticket->priority }}' === 'high'" class="bg-red-500 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase">
-                                        Urgent
-                                    </div>
-                                    <div x-show="'{{ $ticket->priority }}' === 'medium'" class="bg-orange-500 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase">
-                                        Medium
-                                    </div>
-                                    <div x-show="'{{ $ticket->priority }}' === 'low'" class="bg-yellow-500 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase">
-                                        Low
-                                    </div>
+                                    @if($ticket->priority === 'high')
+                                        <div class="bg-red-500 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase">
+                                            Urgent
+                                        </div>
+                                    @elseif($ticket->priority === 'medium')
+                                        <div class="bg-orange-500 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase">
+                                            Medium
+                                        </div>
+                                    @else
+                                        <div class="bg-yellow-500 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase">
+                                            Low
+                                        </div>
+                                    @endif
                                 </div>
                                 
                                 @if($canSort)
-                                    <div class="sort-handle cursor-grab active:cursor-grabbing text-on-surface-variant/40 hover:text-primary transition-colors text-lg" title="Seret untuk mengurutkan" @click.prevent>
+                                    <div wire:sortable.handle class="cursor-grab active:cursor-grabbing text-on-surface-variant/40 hover:text-primary transition-colors text-lg" title="Seret untuk mengurutkan" @click.prevent>
                                         ⠿
                                     </div>
                                 @endif
@@ -218,7 +200,7 @@
                                 <div class="min-w-0 flex-1">
                                     <p class="font-bold text-sm text-on-surface leading-tight truncate">{{ $ticket->user->name }}</p>
                                     <p class="text-xs text-on-surface-variant font-medium truncate mt-0.5">
-                                        <a href="{{ route('tickets.show', $ticket->id) }}" wire:navigate class="hover:underline hover:text-primary transition-colors">
+                                        <a href="{{ route('tickets.show', $ticket->id) }}" class="hover:underline hover:text-primary transition-colors">
                                             {{ $ticket->title }}
                                         </a>
                                     </p>
@@ -236,10 +218,15 @@
                                 <div class="text-right">
                                     <p class="text-[9px] font-bold text-on-surface-variant/70 uppercase tracking-widest mb-0.5">Status</p>
                                     <div class="flex justify-end">
-                                        <span x-show="'{{ $ticket->status }}' === 'baru'" class="font-black text-error">Baru</span>
-                                        <span x-show="'{{ $ticket->status }}' === 'diproses'" class="font-black text-tertiary">Diproses</span>
-                                        <span x-show="'{{ $ticket->status }}' === 'selesai'" class="font-black text-success">Selesai</span>
-                                        <span x-show="'{{ $ticket->status }}' === 'ditutup'" class="font-black text-on-surface-variant">Ditutup</span>
+                                        @if($ticket->status === 'baru')
+                                            <span class="font-black text-error">Baru</span>
+                                        @elseif($ticket->status === 'diproses')
+                                            <span class="font-black text-tertiary">Diproses</span>
+                                        @elseif($ticket->status === 'selesai')
+                                            <span class="font-black text-success">Selesai</span>
+                                        @else
+                                            <span class="font-black text-on-surface-variant">Ditutup</span>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -247,7 +234,7 @@
 
                         <!-- Card Action Buttons -->
                         <div class="flex items-center justify-between border-t border-outline-variant/10 pt-4 pb-12">
-                            <a href="{{ route('tickets.show', $ticket->id) }}" wire:navigate class="inline-flex items-center gap-1 text-xs font-black text-primary hover:text-primary-container transition-colors uppercase tracking-wider">
+                            <a href="{{ route('tickets.show', $ticket->id) }}" class="inline-flex items-center gap-1 text-xs font-black text-primary hover:text-primary-container transition-colors uppercase tracking-wider">
                                 <span class="material-symbols-outlined text-sm">visibility</span> Detail
                             </a>
                             
@@ -256,7 +243,7 @@
                                 (auth()->user()->role === 'agent' && (is_null($ticket->agent_id) || $ticket->agent_id === auth()->id())) ||
                                 (auth()->user()->role === 'user' && $ticket->user_id === auth()->id() && $ticket->status === 'baru')
                             )
-                                <a href="{{ route('tickets.edit', $ticket->id) }}" wire:navigate class="inline-flex items-center gap-1 text-xs font-black text-secondary hover:text-secondary-container transition-colors uppercase tracking-wider">
+                                <a href="{{ route('tickets.edit', $ticket->id) }}" class="inline-flex items-center gap-1 text-xs font-black text-secondary hover:text-secondary-container transition-colors uppercase tracking-wider">
                                     <span class="material-symbols-outlined text-sm">edit</span> Ubah
                                 </a>
                             @endif
@@ -277,3 +264,4 @@
         </div>
     @endif
 </div>
+

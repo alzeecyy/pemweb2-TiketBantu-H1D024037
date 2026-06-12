@@ -118,24 +118,24 @@ new class extends Component
 <div class="sticky top-0 z-50 w-full py-4 px-4 sm:px-6 lg:px-8 bg-transparent">
 <header x-data="{ open: false, profileOpen: false }" class="max-w-7xl mx-auto glass-card rounded-full px-8 py-3 flex justify-between items-center">
     <div class="flex items-center gap-4">
-        <a href="{{ route('tickets.index') }}" wire:navigate class="text-2xl font-black text-primary italic tracking-tighter hover:scale-105 transition-transform duration-300">
+        <a href="{{ route('tickets.index') }}" class="text-2xl font-black text-primary italic tracking-tighter hover:scale-105 transition-transform duration-300">
             TiketBantu
         </a>
         
         <!-- Desktop Nav: Dashboard (leftmost) -> others -->
         <nav class="hidden md:flex gap-6 ml-8">
             @if(auth()->user()->role === 'admin')
-                <a class="{{ request()->routeIs('dashboard') ? 'text-primary font-bold border-b-2 border-primary pb-1' : 'text-on-surface-variant font-medium' }} hover:scale-105 transition-transform duration-300 ease-out" href="{{ route('dashboard') }}" wire:navigate>Home</a>
-                <a class="{{ (request()->routeIs('tickets.*') && !request()->routeIs('tickets.create')) ? 'text-primary font-bold border-b-2 border-primary pb-1' : 'text-on-surface-variant font-medium' }} hover:scale-105 transition-transform duration-300 ease-out" href="{{ route('tickets.index') }}" wire:navigate>Tickets</a>
-                <a class="{{ request()->routeIs('categories.*') ? 'text-primary font-bold border-b-2 border-primary pb-1' : 'text-on-surface-variant font-medium' }} hover:scale-105 transition-transform duration-300 ease-out" href="{{ route('categories.index') }}" wire:navigate>Categories</a>
-                <a class="{{ request()->routeIs('users.*') ? 'text-primary font-bold border-b-2 border-primary pb-1' : 'text-on-surface-variant font-medium' }} hover:scale-105 transition-transform duration-300 ease-out" href="{{ route('users.index') }}" wire:navigate>Customers</a>
+                <a class="{{ request()->routeIs('dashboard') ? 'text-primary font-bold border-b-2 border-primary pb-1' : 'text-on-surface-variant font-medium' }} hover:scale-105 transition-transform duration-300 ease-out" href="{{ route('dashboard') }}">Home</a>
+                <a class="{{ (request()->routeIs('tickets.*') && !request()->routeIs('tickets.create')) ? 'text-primary font-bold border-b-2 border-primary pb-1' : 'text-on-surface-variant font-medium' }} hover:scale-105 transition-transform duration-300 ease-out" href="{{ route('tickets.index') }}">Tickets</a>
+                <a class="{{ request()->routeIs('categories.*') ? 'text-primary font-bold border-b-2 border-primary pb-1' : 'text-on-surface-variant font-medium' }} hover:scale-105 transition-transform duration-300 ease-out" href="{{ route('categories.index') }}">Categories</a>
+                <a class="{{ request()->routeIs('users.*') ? 'text-primary font-bold border-b-2 border-primary pb-1' : 'text-on-surface-variant font-medium' }} hover:scale-105 transition-transform duration-300 ease-out" href="{{ route('users.index') }}">Customers</a>
             @elseif(auth()->user()->role === 'agent')
-                <a class="{{ request()->routeIs('dashboard') ? 'text-primary font-bold border-b-2 border-primary pb-1' : 'text-on-surface-variant font-medium' }} hover:scale-105 transition-transform duration-300 ease-out" href="{{ route('dashboard') }}" wire:navigate>Home</a>
-                <a class="{{ request()->routeIs('tickets.*') ? 'text-primary font-bold border-b-2 border-primary pb-1' : 'text-on-surface-variant font-medium' }} hover:scale-105 transition-transform duration-300 ease-out" href="{{ route('tickets.index') }}" wire:navigate>Tickets</a>
+                <a class="{{ request()->routeIs('dashboard') ? 'text-primary font-bold border-b-2 border-primary pb-1' : 'text-on-surface-variant font-medium' }} hover:scale-105 transition-transform duration-300 ease-out" href="{{ route('dashboard') }}">Home</a>
+                <a class="{{ request()->routeIs('tickets.*') ? 'text-primary font-bold border-b-2 border-primary pb-1' : 'text-on-surface-variant font-medium' }} hover:scale-105 transition-transform duration-300 ease-out" href="{{ route('tickets.index') }}">Tickets</a>
             @else {{-- user / pelapor --}}
-                <a class="{{ (request()->routeIs('tickets.index') || request()->routeIs('tickets.show') || request()->routeIs('tickets.edit')) ? 'text-primary font-bold border-b-2 border-primary pb-1' : 'text-on-surface-variant font-medium' }} hover:scale-105 transition-transform duration-300 ease-out" href="{{ route('tickets.index') }}" wire:navigate>Tickets</a>
-                <a class="{{ request()->routeIs('dashboard') ? 'text-primary font-bold border-b-2 border-primary pb-1' : 'text-on-surface-variant font-medium' }} hover:scale-105 transition-transform duration-300 ease-out" href="{{ route('dashboard') }}" wire:navigate>Dashboard</a>
-                <a class="{{ request()->routeIs('tickets.create') ? 'text-primary font-bold border-b-2 border-primary pb-1' : 'text-on-surface-variant font-medium' }} hover:scale-105 transition-transform duration-300 ease-out" href="{{ route('tickets.create') }}" wire:navigate>Create Ticket</a>
+                <a class="{{ (request()->routeIs('tickets.index') || request()->routeIs('tickets.show') || request()->routeIs('tickets.edit')) ? 'text-primary font-bold border-b-2 border-primary pb-1' : 'text-on-surface-variant font-medium' }} hover:scale-105 transition-transform duration-300 ease-out" href="{{ route('tickets.index') }}">Tickets</a>
+                <a class="{{ request()->routeIs('dashboard') ? 'text-primary font-bold border-b-2 border-primary pb-1' : 'text-on-surface-variant font-medium' }} hover:scale-105 transition-transform duration-300 ease-out" href="{{ route('dashboard') }}">Dashboard</a>
+                <a class="{{ request()->routeIs('tickets.create') ? 'text-primary font-bold border-b-2 border-primary pb-1' : 'text-on-surface-variant font-medium' }} hover:scale-105 transition-transform duration-300 ease-out" href="{{ route('tickets.create') }}">Create Ticket</a>
             @endif
         </nav>
     </div>
@@ -151,7 +151,7 @@ new class extends Component
             </button>
  
             <!-- Dropdown list (Solid white background) -->
-            <div x-show="notificationsOpen" @click.outside="notificationsOpen = false" x-transition class="absolute right-0 mt-3 w-80 glass-card rounded-2xl py-3 z-50">
+            <div x-show="notificationsOpen" @click.outside="notificationsOpen = false" x-transition class="absolute right-0 mt-3 w-80 glass-dropdown rounded-2xl py-3 z-50">
                 <div class="px-4 pb-2 border-b border-outline-variant/20 flex justify-between items-center">
                     <span class="text-xs font-black text-on-surface uppercase tracking-wider">Notifikasi Baru</span>
                     @if(count($notifications) > 0)
@@ -161,7 +161,7 @@ new class extends Component
                 
                 <div class="max-h-72 overflow-y-auto mt-2 divide-y divide-outline-variant/10">
                     @forelse($notifications as $n)
-                        <a href="{{ $n['url'] }}" wire:navigate class="flex items-start gap-3 px-4 py-3 hover:bg-primary/5 transition-colors block">
+                        <a href="{{ $n['url'] }}" class="flex items-start gap-3 px-4 py-3 hover:bg-primary/5 transition-colors block">
                             <div class="w-8 h-8 rounded-full flex items-center justify-center shrink-0 {{ $n['color'] }}">
                                 <span class="material-symbols-outlined text-sm">{{ $n['icon'] }}</span>
                             </div>
@@ -188,7 +188,7 @@ new class extends Component
             </button>
  
             <!-- Dropdown Menu items (Solid white background) -->
-            <div x-show="profileOpen" @click.outside="profileOpen = false" x-transition class="absolute right-0 mt-3 w-48 glass-card rounded-2xl py-2 z-50">
+            <div x-show="profileOpen" @click.outside="profileOpen = false" x-transition class="absolute right-0 mt-3 w-48 glass-dropdown rounded-2xl py-2 z-50">
                 <div class="px-4 py-2 border-b border-outline-variant/20">
                     <p class="text-sm font-black text-on-surface">{{ auth()->user()->name }}</p>
                     <p class="text-xs text-on-surface-variant truncate">{{ auth()->user()->email }}</p>
@@ -197,7 +197,7 @@ new class extends Component
                     </span>
                 </div>
                 
-                <a href="{{ route('profile') }}" wire:navigate class="block w-full text-left px-4 py-2 text-sm text-on-surface hover:bg-primary/10 transition-colors">
+                <a href="{{ route('profile') }}" class="block w-full text-left px-4 py-2 text-sm text-on-surface hover:bg-primary/10 transition-colors">
                     {{ __('Profile') }}
                 </a>
  
@@ -214,22 +214,23 @@ new class extends Component
     </div>
  
     <!-- Mobile Drawer (Solid white background) -->
-    <div x-show="open" @click.outside="open = false" x-transition class="absolute top-20 left-6 right-6 glass-card rounded-3xl py-4 px-6 md:hidden z-50">
+    <div x-show="open" @click.outside="open = false" x-transition class="absolute top-20 left-6 right-6 glass-dropdown rounded-3xl py-4 px-6 md:hidden z-50">
         <nav class="flex flex-col gap-2">
             @if(auth()->user()->role === 'admin')
-                <a class="text-on-surface font-medium hover:text-primary transition-colors py-2 border-b border-outline-variant/10" href="{{ route('dashboard') }}" wire:navigate>Home</a>
-                <a class="text-on-surface font-medium hover:text-primary transition-colors py-2 border-b border-outline-variant/10" href="{{ route('tickets.index') }}" wire:navigate>Tickets</a>
-                <a class="text-on-surface font-medium hover:text-primary transition-colors py-2 border-b border-outline-variant/10" href="{{ route('categories.index') }}" wire:navigate>Categories</a>
-                <a class="text-on-surface font-medium hover:text-primary transition-colors py-2" href="{{ route('users.index') }}" wire:navigate>Customers</a>
+                <a class="text-on-surface font-medium hover:text-primary transition-colors py-2 border-b border-outline-variant/10" href="{{ route('dashboard') }}">Home</a>
+                <a class="text-on-surface font-medium hover:text-primary transition-colors py-2 border-b border-outline-variant/10" href="{{ route('tickets.index') }}">Tickets</a>
+                <a class="text-on-surface font-medium hover:text-primary transition-colors py-2 border-b border-outline-variant/10" href="{{ route('categories.index') }}">Categories</a>
+                <a class="text-on-surface font-medium hover:text-primary transition-colors py-2" href="{{ route('users.index') }}">Customers</a>
             @elseif(auth()->user()->role === 'agent')
-                <a class="text-on-surface font-medium hover:text-primary transition-colors py-2 border-b border-outline-variant/10" href="{{ route('dashboard') }}" wire:navigate>Home</a>
-                <a class="text-on-surface font-medium hover:text-primary transition-colors py-2" href="{{ route('tickets.index') }}" wire:navigate>Tickets</a>
+                <a class="text-on-surface font-medium hover:text-primary transition-colors py-2 border-b border-outline-variant/10" href="{{ route('dashboard') }}">Home</a>
+                <a class="text-on-surface font-medium hover:text-primary transition-colors py-2" href="{{ route('tickets.index') }}">Tickets</a>
             @else {{-- user / pelapor --}}
-                <a class="text-on-surface font-medium hover:text-primary transition-colors py-2 border-b border-outline-variant/10" href="{{ route('tickets.index') }}" wire:navigate>Tickets</a>
-                <a class="text-on-surface font-medium hover:text-primary transition-colors py-2 border-b border-outline-variant/10" href="{{ route('dashboard') }}" wire:navigate>Dashboard</a>
-                <a class="text-on-surface font-medium hover:text-primary transition-colors py-2" href="{{ route('tickets.create') }}" wire:navigate>Create Ticket</a>
+                <a class="text-on-surface font-medium hover:text-primary transition-colors py-2 border-b border-outline-variant/10" href="{{ route('tickets.index') }}">Tickets</a>
+                <a class="text-on-surface font-medium hover:text-primary transition-colors py-2 border-b border-outline-variant/10" href="{{ route('dashboard') }}">Dashboard</a>
+                <a class="text-on-surface font-medium hover:text-primary transition-colors py-2" href="{{ route('tickets.create') }}">Create Ticket</a>
             @endif
         </nav>
     </div>
 </header>
 </div>
+

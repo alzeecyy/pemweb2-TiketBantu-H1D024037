@@ -9,20 +9,7 @@
         </p>
     </div>
 
-    <!-- Alert Messages -->
-    @if (session()->has('message'))
-        <div class="mb-6 p-4 rounded-xl bg-primary-fixed text-on-primary-fixed-variant border border-primary/20 flex items-center gap-2 shadow-sm">
-            <span class="material-symbols-outlined">check_circle</span>
-            <span class="text-sm font-bold">{{ session('message') }}</span>
-        </div>
-    @endif
 
-    @if (session()->has('error'))
-        <div class="mb-6 p-4 rounded-xl bg-red-100 text-red-800 border border-red-200 flex items-center gap-2 shadow-sm">
-            <span class="material-symbols-outlined">error</span>
-            <span class="text-sm font-bold">{{ session('error') }}</span>
-        </div>
-    @endif
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Add Category Form (Left) -->
@@ -114,3 +101,4 @@
         </div>
     </div>
 </div>
+

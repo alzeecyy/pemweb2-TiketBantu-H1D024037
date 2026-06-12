@@ -20,7 +20,7 @@ new #[Layout('layouts.guest')] class extends Component
 
         Session::regenerate();
 
-        $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+        $this->redirect(route('dashboard', absolute: false), navigate: true);
     }
 }; ?>
 
@@ -59,7 +59,7 @@ new #[Layout('layouts.guest')] class extends Component
             <div class="flex justify-between items-center mb-2">
                 <label for="password" class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider">Password</label>
                 @if (Route::has('password.request'))
-                    <a class="text-xs text-secondary hover:text-primary transition-colors font-bold" href="{{ route('password.request') }}" wire:navigate>
+                    <a class="text-xs text-secondary hover:text-primary transition-colors font-bold" href="{{ route('password.request') }}">
                         Forgot?
                     </a>
                 @endif
@@ -96,9 +96,10 @@ new #[Layout('layouts.guest')] class extends Component
     <div class="mt-8 pt-6 border-t border-outline-variant/20 text-center">
         <p class="text-xs text-on-surface-variant font-medium">
             New to the portal? 
-            <a href="{{ route('register') }}" wire:navigate class="text-primary hover:underline font-bold">
+            <a href="{{ route('register') }}" class="text-primary hover:underline font-bold">
                 Create an account
             </a>
         </p>
     </div>
 </div>
+

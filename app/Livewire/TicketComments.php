@@ -28,6 +28,31 @@ class TicketComments extends Component
         'body.max' => 'Komentar maksimal 2000 karakter.',
     ];
 
+    public function placeholder()
+    {
+        return <<<'HTML'
+        <div class="space-y-4 animate-pulse">
+            <h3 class="h-6 w-1/3 bg-outline-variant/30 rounded mb-6"></h3>
+            <div class="space-y-4">
+                <div class="flex gap-3">
+                    <div class="h-8 w-8 rounded-full bg-outline-variant/30"></div>
+                    <div class="flex-1 space-y-2">
+                        <div class="h-4 w-1/4 bg-outline-variant/30 rounded"></div>
+                        <div class="h-10 w-3/4 bg-outline-variant/30 rounded-2xl"></div>
+                    </div>
+                </div>
+                <div class="flex gap-3 flex-row-reverse">
+                    <div class="h-8 w-8 rounded-full bg-outline-variant/30"></div>
+                    <div class="flex-1 space-y-2 flex flex-col items-end">
+                        <div class="h-4 w-1/4 bg-outline-variant/30 rounded"></div>
+                        <div class="h-10 w-2/3 bg-outline-variant/30 rounded-2xl"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        HTML;
+    }
+
     public function addComment()
     {
         $this->validate();
@@ -42,6 +67,9 @@ class TicketComments extends Component
 
         // Emit event agar komponen me-refresh tampilan komentar
         $this->dispatch('commentAdded');
+        
+        // Dispatch toast notification
+        $this->dispatch('toast', message: 'Komentar berhasil ditambahkan.', type: 'success');
     }
 
     public function render()

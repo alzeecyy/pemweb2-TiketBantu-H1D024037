@@ -96,6 +96,14 @@
     transform: translateY(-4px);
 }
 
+.glass-dropdown {
+    background: rgba(255, 255, 255, 0.90) !important;
+    backdrop-filter: blur(32px) saturate(200%) !important;
+    -webkit-backdrop-filter: blur(32px) saturate(200%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.95) !important;
+    box-shadow: 0 10px 25px -5px rgba(124, 82, 170, 0.15), 0 8px 10px -6px rgba(124, 82, 170, 0.1) !important;
+}
+
 .glass-sub-card {
     background: rgba(255, 255, 255, 0.48) !important;
     backdrop-filter: blur(10px) !important;

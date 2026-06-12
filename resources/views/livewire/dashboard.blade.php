@@ -136,7 +136,7 @@
                 <p class="text-[10px] text-on-surface-variant font-medium leading-tight px-1">
                     Buat tiket pengaduan baru dan petugas kami akan segera membantu.
                 </p>
-                <a href="{{ route('tickets.create') }}" wire:navigate class="w-full py-2 bg-gradient-to-r from-primary to-secondary text-white rounded-xl text-[10px] font-bold uppercase tracking-wider hover:scale-[1.02] active:scale-[0.98] transition-all duration-150 shadow-md shadow-primary/20">
+                <a href="{{ route('tickets.create') }}" class="w-full py-2 bg-gradient-to-r from-primary to-secondary text-white rounded-xl text-[10px] font-bold uppercase tracking-wider hover:scale-[1.02] active:scale-[0.98] transition-all duration-150 shadow-md shadow-primary/20">
                     Buat Tiket
                 </a>
             </div>
@@ -164,7 +164,7 @@
                 @else
                     <div class="space-y-3">
                         @foreach($urgentTickets as $ticket)
-                            <a href="{{ route('tickets.show', $ticket->id) }}" wire:navigate class="block p-3 rounded-xl glass-sub-card hover:bg-error/10 transition-colors">
+                            <a href="{{ route('tickets.show', $ticket->id) }}" class="block p-3 rounded-xl glass-sub-card hover:bg-error/10 transition-colors">
                                 <div class="flex justify-between items-start mb-1">
                                     <span class="text-[10px] font-black text-on-surface-variant">#{{ str_pad($ticket->id, 5, '0', STR_PAD_LEFT) }}</span>
                                     <span class="text-[10px] font-bold text-on-surface-variant">{{ $ticket->created_at->diffForHumans() }}</span>
@@ -191,7 +191,7 @@
                 @else
                     <div class="space-y-3">
                         @foreach($mediumTickets as $ticket)
-                            <a href="{{ route('tickets.show', $ticket->id) }}" wire:navigate class="block p-3 rounded-xl glass-sub-card hover:bg-orange-500/10 transition-colors">
+                            <a href="{{ route('tickets.show', $ticket->id) }}" class="block p-3 rounded-xl glass-sub-card hover:bg-orange-500/10 transition-colors">
                                 <div class="flex justify-between items-start mb-1">
                                     <span class="text-[10px] font-black text-on-surface-variant">#{{ str_pad($ticket->id, 5, '0', STR_PAD_LEFT) }}</span>
                                     <span class="text-[10px] font-bold text-on-surface-variant">{{ $ticket->created_at->diffForHumans() }}</span>
@@ -218,7 +218,7 @@
                 @else
                     <div class="space-y-3">
                         @foreach($lowTickets as $ticket)
-                            <a href="{{ route('tickets.show', $ticket->id) }}" wire:navigate class="block p-3 rounded-xl glass-sub-card hover:bg-yellow-500/10 transition-colors">
+                            <a href="{{ route('tickets.show', $ticket->id) }}" class="block p-3 rounded-xl glass-sub-card hover:bg-yellow-500/10 transition-colors">
                                 <div class="flex justify-between items-start mb-1">
                                     <span class="text-[10px] font-black text-on-surface-variant">#{{ str_pad($ticket->id, 5, '0', STR_PAD_LEFT) }}</span>
                                     <span class="text-[10px] font-bold text-on-surface-variant">{{ $ticket->created_at->diffForHumans() }}</span>
@@ -234,3 +234,4 @@
         </div>
     </div>
 </div>
+

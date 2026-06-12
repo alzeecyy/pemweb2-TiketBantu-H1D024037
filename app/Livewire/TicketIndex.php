@@ -70,8 +70,13 @@ class TicketIndex extends Component
             if ($this->assigned === '1') {
                 // "Tugas Saya": hanya tiket yang ditugaskan ke agen ini
                 $query->where('agent_id', $user->id);
+            } else {
+                // "Tiket": tampilkan tiket agen ini ATAU tiket yang belum memiliki agen penanggung jawab (agar bisa diklaim)
+                $query->where(function ($q) use ($user) {
+                    $q->where('agent_id', $user->id)
+                      ->orWhereNull('agent_id');
+                });
             }
-            // "Tiket": tampilkan semua tiket (agen bisa melihat dan mengambil alih)
         } elseif ($user->role === 'user') {
             $query->where('user_id', $user->id);
         }
@@ -114,6 +119,11 @@ class TicketIndex extends Component
         if ($user->role === 'agent') {
             if ($this->assigned === '1') {
                 $metricsQuery->where('agent_id', $user->id);
+            } else {
+                $metricsQuery->where(function ($q) use ($user) {
+                    $q->where('agent_id', $user->id)
+                      ->orWhereNull('agent_id');
+                });
             }
         } elseif ($user->role === 'user') {
             $metricsQuery->where('user_id', $user->id);

@@ -73,7 +73,7 @@ class UserIndex extends Component
         ]);
 
         $this->showCreateModal = false;
-        session()->flash('message', 'User berhasil ditambahkan.');
+        $this->dispatch('toast', message: 'User berhasil ditambahkan.', type: 'success');
     }
 
     public function openEditModal($id)
@@ -114,7 +114,7 @@ class UserIndex extends Component
         
         // Prevent admin from changing their own role to something else
         if ($user->id === auth()->id() && $this->editingRole !== 'admin') {
-            session()->flash('error', 'Anda tidak dapat mengubah role Anda sendiri.');
+            $this->dispatch('toast', message: 'Anda tidak dapat mengubah role Anda sendiri.', type: 'error');
             return;
         }
 
@@ -125,13 +125,13 @@ class UserIndex extends Component
         ]);
 
         $this->showEditModal = false;
-        session()->flash('message', 'User berhasil diperbarui.');
+        $this->dispatch('toast', message: 'User berhasil diperbarui.', type: 'success');
     }
 
     public function deleteUser($id)
     {
         if ($id === auth()->id()) {
-            session()->flash('error', 'Anda tidak dapat menghapus akun Anda sendiri.');
+            $this->dispatch('toast', message: 'Anda tidak dapat menghapus akun Anda sendiri.', type: 'error');
             return;
         }
 
@@ -139,12 +139,12 @@ class UserIndex extends Component
         
         // Check if user has tickets as reporter or agent
         if ($user->tickets()->exists() || $user->assignedTickets()->exists()) {
-            session()->flash('error', 'User tidak dapat dihapus karena memiliki riwayat tiket pengaduan.');
+            $this->dispatch('toast', message: 'User tidak dapat dihapus karena memiliki riwayat tiket pengaduan.', type: 'error');
             return;
         }
 
         $user->delete();
-        session()->flash('message', 'User berhasil dihapus.');
+        $this->dispatch('toast', message: 'User berhasil dihapus.', type: 'success');
     }
 
     public function render()

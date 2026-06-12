@@ -4,7 +4,7 @@
         <h2 class="text-3xl font-black text-on-surface tracking-tight">
             Ubah Tiket <span class="text-primary italic">#TKT-{{ str_pad($ticket->id, 5, '0', STR_PAD_LEFT) }}</span>
         </h2>
-        <a href="{{ route('tickets.show', $ticket->id) }}" wire:navigate class="inline-flex items-center px-4 py-2 bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 rounded-xl font-bold text-xs text-on-surface-variant uppercase tracking-wider transition-all">
+        <a href="{{ route('tickets.show', $ticket->id) }}" class="inline-flex items-center px-4 py-2 bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 rounded-xl font-bold text-xs text-on-surface-variant uppercase tracking-wider transition-all">
             <span class="material-symbols-outlined text-sm mr-1">arrow_back</span> Batal
         </a>
     </div>
@@ -129,3 +129,4 @@
         </div>
     </div>
 </div>
+

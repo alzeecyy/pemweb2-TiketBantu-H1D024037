@@ -102,9 +102,52 @@ Aplikasi ini dibangun menggunakan performa kilat **Laravel 13** dan interaktivit
 ## 🔑 Akun Demo Pengujian
 Untuk mempermudah pengujian, gunakan akun demo di bawah ini dengan password default: `password`
 
-- **Role Admin**: `admin@tiketbantu.com`
-- **Role Agen**: `agen.jaringan@tiketbantu.com` *(Agen khusus penanganan Jaringan)*
-- **Role User/Pelapor**: `user@tiketbantu.com`
+- **Role Admin**:
+  - Email: `admin@tiketbantu.com`
+  - Nama: `Admin TiketBantu`
+- **Role Agen**:
+  - Email: `agen.jaringan@tiketbantu.com` (Nama: `Agen Jaringan`)
+  - Email: `agen.hardware@tiketbantu.com` (Nama: `Agen Hardware`)
+  - Email: `agen.software@tiketbantu.com` (Nama: `Agen Software`)
+  - Email: `agen.fasilitas@tiketbantu.com` (Nama: `Agen Fasilitas`)
+- **Role User/Pelapor**:
+  - Email: `user@tiketbantu.com`
+  - Nama: `Pelapor Umum`
+
+---
+
+## 📈 Bukti Kesesuaian Spesifikasi Dosen & Fitur SLA
+
+Aplikasi **TiketBantu** telah dirancang untuk memenuhi spesifikasi pengujian dosen dengan rincian implementasi sebagai berikut:
+
+### 1. SLA Tracker (Waktu Penyelesaian)
+- **Lokasi Kode**: [ticket-show.blade.php](file:///c:/laragon/www/TiketBantu/resources/views/livewire/ticket-show.blade.php#L162-L173) di bagian kanan bawah sidebar "Detail Status".
+- **Database**: Menyimpan kolom `closed_at` di tabel `tickets` yang akan otomatis terisi `timestamp` saat status diubah menjadi **Selesai** atau **Ditutup**.
+- **Perhitungan Rentang**: Menggunakan interval waktu Carbon antara `created_at` (saat tiket dibuat) dan `closed_at` (saat tiket diselesaikan).
+- **Format Output**: Ditampilkan dalam rentang presisi berupa format: `X hari, Y jam, Z menit` (contoh: `2 hari, 4 jam, 15 menit`).
+- **Statistik SLA**: Terdapat metrik **SLA Success Rate** pada [ticket-index.blade.php](file:///c:/laragon/www/TiketBantu/resources/views/livewire/ticket-index.blade.php#L48-L58) yang menghitung persentase tiket yang telah berhasil diselesaikan/ditutup dari total keseluruhan aduan.
+
+### 2. Tantangan Khusus Livewire 3/4
+- **Komentar Realtime (Livewire Island)**: Diimplementasikan di [ticket-comments.blade.php](file:///c:/laragon/www/TiketBantu/resources/views/livewire/ticket-comments.blade.php). Komponen menggunakan direktif `lazy` agar dimuat secara asinkron (Island khusus komentar) lengkap dengan placeholder shimmer loading skeleton saat proses pemuatan asinkron.
+- **Drag-and-Drop Reordering (`wire:sortable`)**: Terintegrasi di [ticket-index.blade.php](file:///c:/laragon/www/TiketBantu/resources/views/livewire/ticket-index.blade.php#L125) dengan direktif `wire:sortable="handleSort"`, `wire:sortable.item`, dan `wire:sortable.handle` untuk mengubah urutan penanganan tiket secara langsung ke database.
+- **Badge Status & Prioritas Client-Side (`wire:show`)**: Terintegrasi di [ticket-show.blade.php](file:///c:/laragon/www/TiketBantu/resources/views/livewire/ticket-show.blade.php#L106-L138) menggunakan direktif optimistic UI `wire:show="status === 'baru'"` dll. untuk merender status dan prioritas secara instan dari sisi klien.
+
+---
+
+## 📋 Tabel Pemenuhan Kriteria & Spesifikasi Soal
+
+| No | Spesifikasi Tugas / Perintah Soal | Status | Lokasi Berkas Utama & Baris Kode |
+| :-: | --------------------------------- | :---: | -------------------------------- |
+| **1** | **Multi-Role (Admin, Agen, User)** | ✅ | [DatabaseSeeder.php](file:///c:/laragon/www/TiketBantu/database/seeders/DatabaseSeeder.php#L23-L75) (Seeding Akun)<br>[web.php](file:///c:/laragon/www/TiketBantu/routes/web.php#L28) (Proteksi Route) |
+| **2** | **CRUD Tiket (Judul, Deskripsi, Kategori, dsb)** | ✅ | [TicketCreate.php](file:///c:/laragon/www/TiketBantu/app/Livewire/TicketCreate.php) (Create)<br>[TicketIndex.php](file:///c:/laragon/www/TiketBantu/app/Livewire/TicketIndex.php) (Read)<br>[TicketEdit.php](file:///c:/laragon/www/TiketBantu/app/Livewire/TicketEdit.php) (Update)<br>[TicketShow.php](file:///c:/laragon/www/TiketBantu/app/Livewire/TicketShow.php#L126) (Delete) |
+| **3** | **Workflow Status (Baru, Diproses, Selesai, Ditutup)** | ✅ | [TicketShow.php](file:///c:/laragon/www/TiketBantu/app/Livewire/TicketShow.php#L87-L94) (Logika closed_at)<br>[TicketEdit.php](file:///c:/laragon/www/TiketBantu/app/Livewire/TicketEdit.php#L72) (Validasi workflow) |
+| **4** | **Pencarian & Filter (Status, Prioritas, Kategori)** | ✅ | [TicketIndex.php](file:///c:/laragon/www/TiketBantu/app/Livewire/TicketIndex.php#L80-L103) (Query reaktif) |
+| **5** | **Upload Lampiran Valid (Max 5MB)** | ✅ | [TicketCreate.php](file:///c:/laragon/www/TiketBantu/app/Livewire/TicketCreate.php#L32) (Validasi & Upload) |
+| **6** | **Komentar Realtime (Island - Tantangan Khusus)** | ✅ | [TicketComments.php](file:///c:/laragon/www/TiketBantu/app/Livewire/TicketComments.php#L31-L55) (Lazy Loading Placeholder)<br>[ticket-show.blade.php](file:///c:/laragon/www/TiketBantu/resources/views/livewire/ticket-show.blade.php#L92) (Komponen `lazy`) |
+| **7** | **Drag-and-Drop Sorting (Tantangan Khusus)** | ✅ | [ticket-index.blade.php](file:///c:/laragon/www/TiketBantu/resources/views/livewire/ticket-index.blade.php#L125) (`wire:sortable`) |
+| **8** | **Badge Client-side (Tantangan Khusus)** | ✅ | [ticket-show.blade.php](file:///c:/laragon/www/TiketBantu/resources/views/livewire/ticket-show.blade.php#L106-L138) (`wire:show` dinamis) |
+| **9** | **Hak Akses Agen Terproteksi** | ✅ | [TicketIndex.php](file:///c:/laragon/www/TiketBantu/app/Livewire/TicketIndex.php#L69-L77) (Hanya melihat tiket miliknya & unassigned)<br>[TicketShow.php](file:///c:/laragon/www/TiketBantu/app/Livewire/TicketShow.php#L30-L32) (Proteksi abort 403) |
+| **10** | **Fitur Nilai Tambah (SLA Tracker)** | ✅ | [ticket-show.blade.php](file:///c:/laragon/www/TiketBantu/resources/views/livewire/ticket-show.blade.php#L162-L173) (SLA diff format) |
 
 ---
 

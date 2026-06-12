@@ -27,7 +27,9 @@ class TicketShow extends Component
         if ($user->role === 'user' && $this->ticket->user_id !== $user->id) {
             abort(403, 'Anda tidak diizinkan melihat tiket ini.');
         }
-        // Agen bisa melihat semua tiket untuk referensi, tapi hanya bisa mengambil yang belum ditugaskan
+        if ($user->role === 'agent' && !is_null($this->ticket->agent_id) && $this->ticket->agent_id !== $user->id) {
+            abort(403, 'Anda tidak diizinkan melihat tiket agen lain.');
+        }
     }
 
     // Mengambil alih tiket (oleh agen itu sendiri)
@@ -53,7 +55,7 @@ class TicketShow extends Component
             $this->ticket->user->notify(new TicketStatusChanged($this->ticket, $oldStatus, 'diproses'));
         }
 
-        session()->flash('message', 'Anda telah mengambil alih tiket ini.');
+        $this->dispatch('toast', message: 'Anda telah mengambil alih tiket ini.', type: 'success');
     }
 
     // Menyimpan penugasan agen (khusus Admin)
@@ -69,7 +71,7 @@ class TicketShow extends Component
 
         $this->ticket = $this->ticket->fresh();
 
-        session()->flash('message', 'Agen penanggung jawab berhasil diperbarui.');
+        $this->dispatch('toast', message: 'Agen penanggung jawab berhasil diperbarui.', type: 'success');
     }
 
     // Memperbarui status tiket (Agen & Admin)
@@ -101,7 +103,7 @@ class TicketShow extends Component
             $this->ticket->user->notify(new TicketStatusChanged($this->ticket, $oldStatus, $this->status));
         }
 
-        session()->flash('message', 'Status tiket berhasil diubah menjadi: ' . ucfirst($this->status));
+        $this->dispatch('toast', message: 'Status tiket berhasil diubah menjadi: ' . ucfirst($this->status), type: 'success');
     }
 
     // Memperbarui prioritas tiket (Agen & Admin)
@@ -119,7 +121,7 @@ class TicketShow extends Component
         $this->ticket->update(['priority' => $this->priority]);
         $this->ticket = $this->ticket->fresh();
 
-        session()->flash('message', 'Prioritas tiket berhasil diubah menjadi: ' . ucfirst($this->priority));
+        $this->dispatch('toast', message: 'Prioritas tiket berhasil diubah menjadi: ' . ucfirst($this->priority), type: 'success');
     }
 
     // Hapus tiket (Admin only - soft delete)

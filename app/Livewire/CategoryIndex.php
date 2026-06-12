@@ -31,7 +31,7 @@ class CategoryIndex extends Component
         ]);
 
         $this->name = '';
-        session()->flash('message', 'Kategori baru berhasil ditambahkan.');
+        $this->dispatch('toast', message: 'Kategori baru berhasil ditambahkan.', type: 'success');
     }
 
     public function edit($id)
@@ -65,7 +65,7 @@ class CategoryIndex extends Component
 
         $this->editingCategoryId = null;
         $this->editingCategoryName = '';
-        session()->flash('message', 'Nama kategori berhasil diubah.');
+        $this->dispatch('toast', message: 'Nama kategori berhasil diubah.', type: 'success');
     }
 
     public function delete($id)
@@ -74,12 +74,12 @@ class CategoryIndex extends Component
 
         // Check if there are tickets belonging to this category
         if ($category->tickets()->exists()) {
-            session()->flash('error', 'Kategori ini tidak dapat dihapus karena masih digunakan oleh tiket pengaduan.');
+            $this->dispatch('toast', message: 'Kategori ini tidak dapat dihapus karena masih digunakan oleh tiket pengaduan.', type: 'error');
             return;
         }
 
         $category->delete();
-        session()->flash('message', 'Kategori berhasil dihapus.');
+        $this->dispatch('toast', message: 'Kategori berhasil dihapus.', type: 'success');
     }
 
     public function render()

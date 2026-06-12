@@ -121,9 +121,10 @@ new #[Layout('layouts.guest')] class extends Component
     <div class="mt-6 pt-6 border-t border-outline-variant/20 text-center">
         <p class="text-xs text-on-surface-variant font-medium">
             Sudah terdaftar? 
-            <a href="{{ route('login') }}" wire:navigate class="text-primary hover:underline font-bold">
+            <a href="{{ route('login') }}" class="text-primary hover:underline font-bold">
                 Masuk
             </a>
         </p>
     </div>
 </div>
+

@@ -10,7 +10,7 @@
                 (auth()->user()->role === 'agent' && (is_null($ticket->agent_id) || $ticket->agent_id === auth()->id())) ||
                 (auth()->user()->role === 'user' && $ticket->user_id === auth()->id() && $ticket->status === 'baru')
             )
-                <a href="{{ route('tickets.edit', $ticket->id) }}" wire:navigate class="inline-flex items-center px-4 py-2 bg-primary text-white hover:scale-105 rounded-xl font-bold text-xs uppercase tracking-wider transition-all shadow-md shadow-primary/20">
+                <a href="{{ route('tickets.edit', $ticket->id) }}" class="inline-flex items-center px-4 py-2 bg-primary text-white hover:scale-105 rounded-xl font-bold text-xs uppercase tracking-wider transition-all shadow-md shadow-primary/20">
                     <span class="material-symbols-outlined text-sm mr-1">edit</span> Ubah Tiket
                 </a>
             @endif
@@ -25,19 +25,13 @@
                 </button>
             @endif
 
-            <a href="{{ route('tickets.index') }}" wire:navigate class="inline-flex items-center px-4 py-2 bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 rounded-xl font-bold text-xs text-on-surface-variant uppercase tracking-wider transition-all">
+            <a href="{{ route('tickets.index') }}" class="inline-flex items-center px-4 py-2 bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 rounded-xl font-bold text-xs text-on-surface-variant uppercase tracking-wider transition-all">
                 <span class="material-symbols-outlined text-sm mr-1">arrow_back</span> Kembali
             </a>
         </div>
     </div>
 
-    <!-- Flash Message -->
-    @if (session()->has('message'))
-        <div class="mb-6 p-4 rounded-xl bg-primary-fixed text-on-primary-fixed-variant border border-primary/20 flex items-center gap-2 shadow-sm">
-            <span class="material-symbols-outlined">check_circle</span>
-            <span class="text-sm font-bold">{{ session('message') }}</span>
-        </div>
-    @endif
+
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Main Ticket Content (Left - 2 Columns) -->
@@ -89,7 +83,7 @@
 
             <!-- Livewire Island: Komponen Komentar Realtime -->
             <div class="glass-card rounded-2xl p-8 shadow-xl border border-outline-variant/20">
-                <livewire:ticket-comments :ticket="$ticket" :key="'comments-'.$ticket->id" />
+                <livewire:ticket-comments lazy :ticket="$ticket" :key="'comments-'.$ticket->id" />
             </div>
         </div>
 
@@ -105,20 +99,19 @@
                     <!-- Status Badge -->
                     <div>
                         <span class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-1.5">
-                            Status Tiket: (Aktif: <span x-text="$wire.status" class="text-primary font-black"></span>)
+                            Status Tiket:
                         </span>
-                        <!-- Client-side directive: menggunakan Alpine x-show untuk status -->
                         <div class="flex gap-1">
-                            <span x-show="$wire.status === 'baru'" class="px-3 py-1 inline-flex text-xs leading-5 font-black rounded-full uppercase bg-error-container text-on-error-container">
+                            <span wire:show="status === 'baru'" class="px-3 py-1 inline-flex text-xs leading-5 font-black rounded-full uppercase bg-error-container text-on-error-container">
                                 Baru
                             </span>
-                            <span x-show="$wire.status === 'diproses'" class="px-3 py-1 inline-flex text-xs leading-5 font-black rounded-full uppercase bg-tertiary-fixed text-on-tertiary-fixed-variant">
+                            <span wire:show="status === 'diproses'" class="px-3 py-1 inline-flex text-xs leading-5 font-black rounded-full uppercase bg-tertiary-fixed text-on-tertiary-fixed-variant">
                                 Diproses
                             </span>
-                            <span x-show="$wire.status === 'selesai'" class="px-3 py-1 inline-flex text-xs leading-5 font-black rounded-full uppercase bg-green-100 text-green-800">
+                            <span wire:show="status === 'selesai'" class="px-3 py-1 inline-flex text-xs leading-5 font-black rounded-full uppercase bg-green-100 text-green-800">
                                 Selesai
                             </span>
-                            <span x-show="$wire.status === 'ditutup'" class="px-3 py-1 inline-flex text-xs leading-5 font-black rounded-full uppercase bg-surface-variant text-on-surface-variant">
+                            <span wire:show="status === 'ditutup'" class="px-3 py-1 inline-flex text-xs leading-5 font-black rounded-full uppercase bg-surface-variant text-on-surface-variant">
                                 Ditutup
                             </span>
                         </div>
@@ -127,15 +120,14 @@
                     <!-- Priority Badge -->
                     <div>
                         <span class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-1.5">Prioritas:</span>
-                        <!-- Client-side directive: menggunakan Alpine x-show untuk prioritas -->
                         <div class="flex gap-1">
-                            <span x-show="$wire.priority === 'high'" class="px-3 py-1 inline-flex text-xs leading-5 font-black rounded-full uppercase bg-primary-fixed text-on-primary-fixed-variant">
+                            <span wire:show="priority === 'high'" class="px-3 py-1 inline-flex text-xs leading-5 font-black rounded-full uppercase bg-primary-fixed text-on-primary-fixed-variant">
                                 Urgent
                             </span>
-                            <span x-show="$wire.priority === 'medium'" class="px-3 py-1 inline-flex text-xs leading-5 font-black rounded-full uppercase bg-tertiary-fixed text-on-tertiary-fixed-variant">
+                            <span wire:show="priority === 'medium'" class="px-3 py-1 inline-flex text-xs leading-5 font-black rounded-full uppercase bg-tertiary-fixed text-on-tertiary-fixed-variant">
                                 Medium
                             </span>
-                            <span x-show="$wire.priority === 'low'" class="px-3 py-1 inline-flex text-xs leading-5 font-black rounded-full uppercase bg-surface-variant text-on-surface-variant">
+                            <span wire:show="priority === 'low'" class="px-3 py-1 inline-flex text-xs leading-5 font-black rounded-full uppercase bg-surface-variant text-on-surface-variant">
                                 Low
                             </span>
                         </div>
@@ -245,3 +237,4 @@
         </div>
     </div>
 </div>
+

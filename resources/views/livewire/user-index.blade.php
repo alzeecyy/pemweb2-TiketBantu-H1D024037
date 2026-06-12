@@ -15,20 +15,7 @@
         </button>
     </div>
 
-    <!-- Alert Notifications -->
-    @if (session()->has('message'))
-        <div class="mb-6 p-4 rounded-xl bg-success/10 border border-success/30 text-success text-xs font-bold flex items-center gap-2">
-            <span class="material-symbols-outlined">check_circle</span>
-            {{ session('message') }}
-        </div>
-    @endif
 
-    @if (session()->has('error'))
-        <div class="mb-6 p-4 rounded-xl bg-error/10 border border-error/30 text-error text-xs font-bold flex items-center gap-2">
-            <span class="material-symbols-outlined">error</span>
-            {{ session('error') }}
-        </div>
-    @endif
 
     <!-- Filters & Search -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -256,3 +243,4 @@
         </div>
     </div>
 </div>
+

@@ -29,7 +29,7 @@ class TicketCreate extends Component
         'description' => 'required|string|min:10',
         'category_id' => 'required|exists:categories,id',
         'priority' => 'required|in:low,medium,high',
-        'attachment' => 'nullable|file|max:5120', // Maksimal file 5MB
+        'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx,zip,txt|max:5120', // Maksimal file 5MB
     ];
 
     protected $messages = [
@@ -42,6 +42,7 @@ class TicketCreate extends Component
         'priority.required' => 'Pilih tingkat prioritas.',
         'priority.in' => 'Prioritas tidak valid.',
         'attachment.file' => 'Lampiran harus berupa file.',
+        'attachment.mimes' => 'Format berkas lampiran tidak didukung (harus berupa jpg, jpeg, png, pdf, doc, docx, zip, atau txt).',
         'attachment.max' => 'Ukuran file lampiran maksimal 5MB.',
         'user_id.required' => 'Pilih pelapor terlebih dahulu.',
         'user_id.exists' => 'Pelapor tidak valid.',

@@ -133,8 +133,8 @@ new class extends Component
                 <a class="{{ request()->routeIs('dashboard') ? 'text-primary font-bold border-b-2 border-primary pb-1' : 'text-on-surface-variant font-medium' }} hover:scale-105 transition-transform duration-300 ease-out" href="{{ route('dashboard') }}" wire:navigate>Home</a>
                 <a class="{{ request()->routeIs('tickets.*') ? 'text-primary font-bold border-b-2 border-primary pb-1' : 'text-on-surface-variant font-medium' }} hover:scale-105 transition-transform duration-300 ease-out" href="{{ route('tickets.index') }}" wire:navigate>Tickets</a>
             @else {{-- user / pelapor --}}
-                <a class="{{ (request()->routeIs('tickets.index') || request()->routeIs('tickets.show') || request()->routeIs('tickets.edit')) ? 'text-primary font-bold border-b-2 border-primary pb-1' : 'text-on-surface-variant font-medium' }} hover:scale-105 transition-transform duration-300 ease-out" href="{{ route('tickets.index') }}" wire:navigate>Home</a>
-                <a class="{{ request()->routeIs('dashboard') ? 'text-primary font-bold border-b-2 border-primary pb-1' : 'text-on-surface-variant font-medium' }} hover:scale-105 transition-transform duration-300 ease-out" href="{{ route('dashboard') }}" wire:navigate>My Tickets</a>
+                <a class="{{ (request()->routeIs('tickets.index') || request()->routeIs('tickets.show') || request()->routeIs('tickets.edit')) ? 'text-primary font-bold border-b-2 border-primary pb-1' : 'text-on-surface-variant font-medium' }} hover:scale-105 transition-transform duration-300 ease-out" href="{{ route('tickets.index') }}" wire:navigate>Tickets</a>
+                <a class="{{ request()->routeIs('dashboard') ? 'text-primary font-bold border-b-2 border-primary pb-1' : 'text-on-surface-variant font-medium' }} hover:scale-105 transition-transform duration-300 ease-out" href="{{ route('dashboard') }}" wire:navigate>Dashboard</a>
                 <a class="{{ request()->routeIs('tickets.create') ? 'text-primary font-bold border-b-2 border-primary pb-1' : 'text-on-surface-variant font-medium' }} hover:scale-105 transition-transform duration-300 ease-out" href="{{ route('tickets.create') }}" wire:navigate>Create Ticket</a>
             @endif
         </nav>
@@ -225,8 +225,8 @@ new class extends Component
                 <a class="text-on-surface font-medium hover:text-primary transition-colors py-2 border-b border-outline-variant/10" href="{{ route('dashboard') }}" wire:navigate>Home</a>
                 <a class="text-on-surface font-medium hover:text-primary transition-colors py-2" href="{{ route('tickets.index') }}" wire:navigate>Tickets</a>
             @else {{-- user / pelapor --}}
-                <a class="text-on-surface font-medium hover:text-primary transition-colors py-2 border-b border-outline-variant/10" href="{{ route('tickets.index') }}" wire:navigate>Home</a>
-                <a class="text-on-surface font-medium hover:text-primary transition-colors py-2 border-b border-outline-variant/10" href="{{ route('dashboard') }}" wire:navigate>My Tickets</a>
+                <a class="text-on-surface font-medium hover:text-primary transition-colors py-2 border-b border-outline-variant/10" href="{{ route('tickets.index') }}" wire:navigate>Tickets</a>
+                <a class="text-on-surface font-medium hover:text-primary transition-colors py-2 border-b border-outline-variant/10" href="{{ route('dashboard') }}" wire:navigate>Dashboard</a>
                 <a class="text-on-surface font-medium hover:text-primary transition-colors py-2" href="{{ route('tickets.create') }}" wire:navigate>Create Ticket</a>
             @endif
         </nav>

@@ -12,6 +12,7 @@ class TicketShow extends Component
     public Ticket $ticket;
     public $status;
     public $agent_id;
+    public $priority;
 
     public function mount(Ticket $ticket)
     {
@@ -19,15 +20,14 @@ class TicketShow extends Component
         $this->ticket = $ticket->load(['category', 'user', 'agent', 'attachments']);
         $this->status = $ticket->status;
         $this->agent_id = $ticket->agent_id;
+        $this->priority = $ticket->priority;
 
         // Cek hak akses melihat detail tiket
         $user = auth()->user();
         if ($user->role === 'user' && $this->ticket->user_id !== $user->id) {
             abort(403, 'Anda tidak diizinkan melihat tiket ini.');
         }
-        if ($user->role === 'agent' && $this->ticket->agent_id !== null && $this->ticket->agent_id !== $user->id) {
-            abort(403, 'Tiket ini ditugaskan ke agen lain.');
-        }
+        // Agen bisa melihat semua tiket untuk referensi, tapi hanya bisa mengambil yang belum ditugaskan
     }
 
     // Mengambil alih tiket (oleh agen itu sendiri)
@@ -102,6 +102,38 @@ class TicketShow extends Component
         }
 
         session()->flash('message', 'Status tiket berhasil diubah menjadi: ' . ucfirst($this->status));
+    }
+
+    // Memperbarui prioritas tiket (Agen & Admin)
+    public function updatePriority()
+    {
+        $user = auth()->user();
+        if ($user->role !== 'agent' && $user->role !== 'admin') {
+            abort(403);
+        }
+
+        $this->validate([
+            'priority' => 'required|in:low,medium,high',
+        ]);
+
+        $this->ticket->update(['priority' => $this->priority]);
+        $this->ticket = $this->ticket->fresh();
+
+        session()->flash('message', 'Prioritas tiket berhasil diubah menjadi: ' . ucfirst($this->priority));
+    }
+
+    // Hapus tiket (Admin only - soft delete)
+    public function deleteTicket()
+    {
+        if (auth()->user()->role !== 'admin') {
+            abort(403);
+        }
+
+        $this->ticket->delete();
+
+        session()->flash('message', 'Tiket pengaduan berhasil dihapus.');
+
+        return $this->redirect(route('tickets.index'), navigate: true);
     }
 
     public function render()

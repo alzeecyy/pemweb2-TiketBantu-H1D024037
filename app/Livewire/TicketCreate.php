@@ -16,7 +16,13 @@ class TicketCreate extends Component
     public $description = '';
     public $category_id = '';
     public $priority = 'low';
+    public $user_id = ''; // Untuk pelapor/user
     public $attachment; // Untuk upload berkas lampiran
+
+    public function mount()
+    {
+        $this->user_id = auth()->id();
+    }
 
     protected $rules = [
         'title' => 'required|string|min:5|max:255',
@@ -37,11 +43,18 @@ class TicketCreate extends Component
         'priority.in' => 'Prioritas tidak valid.',
         'attachment.file' => 'Lampiran harus berupa file.',
         'attachment.max' => 'Ukuran file lampiran maksimal 5MB.',
+        'user_id.required' => 'Pilih pelapor terlebih dahulu.',
+        'user_id.exists' => 'Pelapor tidak valid.',
     ];
 
     public function save()
     {
-        $this->validate();
+        $rules = $this->rules;
+        if (auth()->user()->role === 'admin') {
+            $rules['user_id'] = 'required|exists:users,id';
+        }
+
+        $this->validate($rules);
 
         // Buat tiket baru
         $ticket = Ticket::create([
@@ -50,7 +63,7 @@ class TicketCreate extends Component
             'category_id' => $this->category_id,
             'priority' => $this->priority,
             'status' => 'baru',
-            'user_id' => auth()->id(),
+            'user_id' => auth()->user()->role === 'admin' ? $this->user_id : auth()->id(),
             'sort_order' => Ticket::max('sort_order') + 1, // Untuk wire:sort drag-and-drop
         ]);
 
@@ -74,9 +87,11 @@ class TicketCreate extends Component
     public function render()
     {
         $categories = Category::all();
+        $reporters = auth()->user()->role === 'admin' ? \App\Models\User::all() : collect();
 
         return view('livewire.ticket-create', [
-            'categories' => $categories
+            'categories' => $categories,
+            'reporters' => $reporters,
         ])->layout('layouts.app');
     }
 }

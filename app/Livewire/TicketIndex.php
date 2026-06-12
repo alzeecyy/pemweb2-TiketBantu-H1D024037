@@ -6,21 +6,33 @@ use Livewire\Component;
 use App\Models\Ticket;
 use App\Models\Category;
 use Livewire\WithPagination;
+use Livewire\Attributes\Url;
 
 class TicketIndex extends Component
 {
     use WithPagination;
 
+    #[Url(except: '')]
     public $search = '';
+
+    #[Url(except: '')]
     public $status = '';
+
+    #[Url(except: '')]
     public $priority = '';
+
+    #[Url(except: '')]
     public $category_id = '';
+
+    #[Url(except: '')]
+    public $assigned = '';
 
     // Reset halaman paginasi jika pencarian atau filter berubah
     public function updatingSearch() { $this->resetPage(); }
     public function updatingStatus() { $this->resetPage(); }
     public function updatingPriority() { $this->resetPage(); }
     public function updatingCategoryId() { $this->resetPage(); }
+    public function updatingAssigned() { $this->resetPage(); }
 
     /**
      * Cek apakah user saat ini bisa melakukan drag-and-drop sort.
@@ -55,10 +67,11 @@ class TicketIndex extends Component
 
         // Filter berdasarkan Role
         if ($user->role === 'agent') {
-            $query->where(function ($q) use ($user) {
-                $q->where('agent_id', $user->id)
-                  ->orWhereNull('agent_id');
-            });
+            if ($this->assigned === '1') {
+                // "Tugas Saya": hanya tiket yang ditugaskan ke agen ini
+                $query->where('agent_id', $user->id);
+            }
+            // "Tiket": tampilkan semua tiket (agen bisa melihat dan mengambil alih)
         } elseif ($user->role === 'user') {
             $query->where('user_id', $user->id);
         }
@@ -96,10 +109,36 @@ class TicketIndex extends Component
 
         $categories = Category::all();
 
+        // Hitung statistik berdasarkan role/visibilitas user saat ini
+        $metricsQuery = Ticket::query();
+        if ($user->role === 'agent') {
+            if ($this->assigned === '1') {
+                $metricsQuery->where('agent_id', $user->id);
+            }
+        } elseif ($user->role === 'user') {
+            $metricsQuery->where('user_id', $user->id);
+        }
+
+        $allTicketsCount = $metricsQuery->count();
+        $baruCount = (clone $metricsQuery)->where('status', 'baru')->count();
+        $prosesCount = (clone $metricsQuery)->where('status', 'diproses')->count();
+        $selesaiCount = (clone $metricsQuery)->where('status', 'selesai')->count();
+        $ditutupCount = (clone $metricsQuery)->where('status', 'ditutup')->count();
+
+        $slaSuccess = 100;
+        if ($allTicketsCount > 0) {
+            $resolvedCount = $selesaiCount + $ditutupCount;
+            $slaSuccess = round(($resolvedCount / $allTicketsCount) * 100);
+        }
+
         return view('livewire.ticket-index', [
             'tickets' => $tickets,
             'categories' => $categories,
             'canSort' => $this->canSort(),
+            'baruCount' => $baruCount,
+            'prosesCount' => $prosesCount,
+            'selesaiCount' => $selesaiCount,
+            'slaSuccess' => $slaSuccess,
         ])->layout('layouts.app');
     }
 }

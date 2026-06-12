@@ -31,16 +31,37 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        // 3. Buat akun demo Agent/Petugas
-        User::firstOrCreate(
-            ['email' => 'agent@tiketbantu.com'],
+        // 3. Buat akun demo Agen per Kategori
+        $agents = [
             [
-                'name' => 'Agen Support',
-                'password' => Hash::make('password'),
-                'role' => 'agent',
-                'email_verified_at' => now(),
-            ]
-        );
+                'name' => 'Agen Jaringan',
+                'email' => 'agen.jaringan@tiketbantu.com',
+            ],
+            [
+                'name' => 'Agen Hardware',
+                'email' => 'agen.hardware@tiketbantu.com',
+            ],
+            [
+                'name' => 'Agen Software',
+                'email' => 'agen.software@tiketbantu.com',
+            ],
+            [
+                'name' => 'Agen Fasilitas',
+                'email' => 'agen.fasilitas@tiketbantu.com',
+            ],
+        ];
+
+        foreach ($agents as $agent) {
+            User::firstOrCreate(
+                ['email' => $agent['email']],
+                [
+                    'name' => $agent['name'],
+                    'password' => Hash::make('password'),
+                    'role' => 'agent',
+                    'email_verified_at' => now(),
+                ]
+            );
+        }
 
         // 4. Buat akun demo User/Pelapor
         User::firstOrCreate(

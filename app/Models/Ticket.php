@@ -3,13 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 
 #[Fillable(['title', 'description', 'priority', 'status', 'category_id', 'user_id', 'agent_id', 'sort_order', 'closed_at'])]
 class Ticket extends Model
 {
-    use SoftDeletes;
     /**
      * Kategori dari tiket ini.
      */

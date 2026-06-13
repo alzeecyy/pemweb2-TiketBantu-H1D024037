@@ -151,7 +151,8 @@ Aplikasi **TiketBantu** telah dirancang untuk memenuhi spesifikasi pengujian dos
 
 ---
 
-## 📸 Demo Tampilan
-*(Screenshot Section)*
+## 🎬 Video Demo
 
-*(Link Video Demo)*
+[![Video Demo TiketBantu](https://img.youtube.com/vi/7ELXuct7DjQ/maxresdefault.jpg)](https://youtu.be/7ELXuct7DjQ)
+
+🔗 **Tonton Video Demo**: [https://youtu.be/7ELXuct7DjQ](https://youtu.be/7ELXuct7DjQ)

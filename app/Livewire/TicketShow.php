@@ -47,6 +47,8 @@ class TicketShow extends Component
             'status' => 'diproses' // Otomatis ubah status ke diproses saat diambil
         ]);
 
+        $this->ticket = $this->ticket->fresh(['category', 'user', 'agent', 'attachments']);
+
         $this->agent_id = $user->id;
         $this->status = 'diproses';
 
@@ -69,7 +71,7 @@ class TicketShow extends Component
             'agent_id' => $this->agent_id ?: null
         ]);
 
-        $this->ticket = $this->ticket->fresh();
+        $this->ticket = $this->ticket->fresh(['category', 'user', 'agent', 'attachments']);
 
         $this->dispatch('toast', message: 'Agen penanggung jawab berhasil diperbarui.', type: 'success');
     }
@@ -96,7 +98,7 @@ class TicketShow extends Component
         }
 
         $this->ticket->update($updateData);
-        $this->ticket = $this->ticket->fresh();
+        $this->ticket = $this->ticket->fresh(['category', 'user', 'agent', 'attachments']);
 
         // Kirim notifikasi email ke pelapor jika status berubah
         if ($oldStatus !== $this->status) {
@@ -119,7 +121,7 @@ class TicketShow extends Component
         ]);
 
         $this->ticket->update(['priority' => $this->priority]);
-        $this->ticket = $this->ticket->fresh();
+        $this->ticket = $this->ticket->fresh(['category', 'user', 'agent', 'attachments']);
 
         $this->dispatch('toast', message: 'Prioritas tiket berhasil diubah menjadi: ' . ucfirst($this->priority), type: 'success');
     }

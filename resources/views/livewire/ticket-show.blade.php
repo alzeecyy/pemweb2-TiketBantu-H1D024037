@@ -1,4 +1,4 @@
-<div>
+<div wire:poll.15s>
     <!-- Header Section -->
     <div class="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <h2 class="text-3xl font-black text-on-surface tracking-tight">
@@ -61,18 +61,33 @@
                         <h4 class="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-4">Lampiran Berkas:</h4>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             @foreach($ticket->attachments as $attachment)
-                                <div class="flex items-center p-3 rounded-xl border border-outline-variant/25 bg-surface-container-low hover:bg-surface-container transition-all">
-                                    <div class="mr-3 text-primary">
-                                        <span class="material-symbols-outlined text-3xl">description</span>
-                                    </div>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-xs font-bold text-on-surface truncate">{{ $attachment->file_name }}</p>
-                                        <p class="text-[9px] text-on-surface-variant uppercase tracking-wider mt-0.5">Lampiran #{{ $attachment->id }}</p>
-                                    </div>
-                                    <div class="ml-2">
-                                        <a href="{{ asset('storage/' . $attachment->file_path) }}" target="_blank" class="inline-flex items-center px-2.5 py-1 bg-primary text-white text-[10px] font-black uppercase rounded-lg hover:scale-105 transition-all">
-                                            Lihat
+                                @php
+                                    $ext = strtolower(pathinfo($attachment->file_name, PATHINFO_EXTENSION));
+                                    $isImage = in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
+                                    $fileUrl = url('storage/' . $attachment->file_path);
+                                @endphp
+
+                                <div class="rounded-xl border border-outline-variant/25 bg-surface-container-low hover:bg-surface-container transition-all overflow-hidden">
+                                    {{-- Preview gambar inline --}}
+                                    @if($isImage)
+                                        <a href="{{ $fileUrl }}" target="_blank" class="block">
+                                            <img src="{{ $fileUrl }}" alt="{{ $attachment->file_name }}" class="w-full h-40 object-cover hover:scale-105 transition-transform duration-300" loading="lazy">
                                         </a>
+                                    @endif
+
+                                    <div class="flex items-center p-3">
+                                        <div class="mr-3 text-primary">
+                                            <span class="material-symbols-outlined text-2xl">{{ $isImage ? 'image' : 'description' }}</span>
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            <p class="text-xs font-bold text-on-surface truncate">{{ $attachment->file_name }}</p>
+                                            <p class="text-[9px] text-on-surface-variant uppercase tracking-wider mt-0.5">Lampiran #{{ $attachment->id }}</p>
+                                        </div>
+                                        <div class="ml-2">
+                                            <a href="{{ $fileUrl }}" target="_blank" class="inline-flex items-center px-2.5 py-1 bg-primary text-white text-[10px] font-black uppercase rounded-lg hover:scale-105 transition-all">
+                                                Lihat
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             @endforeach

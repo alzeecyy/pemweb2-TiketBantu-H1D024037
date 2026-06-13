@@ -125,7 +125,6 @@
             @if($canSort)
                 wire:sortable="handleSort"
             @endif
-            wire:key="ticket-grid-{{ $tickets->pluck('id')->join('-') }}"
             class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
         >
             @foreach($tickets as $ticket)
@@ -156,103 +155,106 @@
                     @endif
                     x-data
                     x-on:click="if (!$event.target.closest('a, button, [wire\:sortable\.handle]')) { Livewire.navigate('{{ route('tickets.show', $ticket->id) }}') }"
-                    class="relative glass-card ticket-pass p-0 overflow-hidden cursor-pointer hover:scale-[1.03] transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10"
+                    class="relative glass-card ticket-pass p-0 overflow-hidden cursor-pointer hover:scale-[1.03] transition-[transform,box-shadow] duration-200 hover:shadow-2xl hover:shadow-primary/10"
                 >
-                    <div class="p-6 relative z-10">
-                        <div class="flex justify-between items-start mb-6">
-                            <div class="space-y-1">
-                                <p class="text-[10px] uppercase font-bold tracking-[0.2em] {{ $statusLabelColor }}">TICKET-ID</p>
-                                <h3 class="text-xl font-black text-on-surface">#TKT-{{ str_pad($ticket->id, 5, '0', STR_PAD_LEFT) }}</h3>
-                            </div>
-                            
-                            <div class="flex items-center gap-2">
-                                <div class="flex gap-1">
-                                    @if($ticket->priority === 'high')
-                                        <div class="bg-red-500 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase">
-                                            Urgent
-                                        </div>
-                                    @elseif($ticket->priority === 'medium')
-                                        <div class="bg-orange-500 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase">
-                                            Medium
-                                        </div>
-                                    @else
-                                        <div class="bg-yellow-500 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase">
-                                            Low
+                    <!-- Inner wrapper to enable unified rotation/scale of card content & bottom banner during dragging -->
+                    <div class="w-full h-full relative draggable-inner-wrapper">
+                        <div class="p-6 relative z-10">
+                            <div class="flex justify-between items-start mb-6">
+                                <div class="space-y-1">
+                                    <p class="text-[10px] uppercase font-bold tracking-[0.2em] {{ $statusLabelColor }}">TICKET-ID</p>
+                                    <h3 class="text-xl font-black text-on-surface">#TKT-{{ str_pad($ticket->id, 5, '0', STR_PAD_LEFT) }}</h3>
+                                </div>
+                                
+                                <div class="flex items-center gap-2">
+                                    <div class="flex gap-1">
+                                        @if($ticket->priority === 'high')
+                                            <div class="bg-red-500 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase">
+                                                Urgent
+                                            </div>
+                                        @elseif($ticket->priority === 'medium')
+                                            <div class="bg-orange-500 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase">
+                                                Medium
+                                            </div>
+                                        @else
+                                            <div class="bg-yellow-500 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase">
+                                                Low
+                                            </div>
+                                        @endif
+                                    </div>
+                                    
+                                    @if($canSort)
+                                        <div wire:sortable.handle class="cursor-grab active:cursor-grabbing text-on-surface-variant/40 hover:text-primary transition-colors text-lg" title="Seret untuk mengurutkan" @click.prevent>
+                                            ⠿
                                         </div>
                                     @endif
                                 </div>
-                                
-                                @if($canSort)
-                                    <div wire:sortable.handle class="cursor-grab active:cursor-grabbing text-on-surface-variant/40 hover:text-primary transition-colors text-lg" title="Seret untuk mengurutkan" @click.prevent>
-                                        ⠿
+                            </div>
+
+                            <!-- Nested Glass Details Pane -->
+                            <div class="glass-sub-card p-4 rounded-2xl mb-4 space-y-4">
+                                <!-- Reporter & Ticket Title Info -->
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-full border-2 border-white/60 shadow-sm bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-black text-xs shrink-0">
+                                        {{ strtoupper(substr($ticket->user->name, 0, 2)) }}
                                     </div>
+                                    <div class="min-w-0 flex-1">
+                                        <p class="font-bold text-sm text-on-surface leading-tight truncate">{{ $ticket->user->name }}</p>
+                                        <p class="text-xs text-on-surface-variant font-medium truncate mt-0.5">
+                                            <a href="{{ route('tickets.show', $ticket->id) }}" class="hover:underline hover:text-primary transition-colors">
+                                                {{ $ticket->title }}
+                                            </a>
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="glass-divider my-2"></div>
+
+                                <!-- Details Section -->
+                                <div class="flex justify-between items-center text-xs">
+                                    <div>
+                                        <p class="text-[9px] font-bold text-on-surface-variant/70 uppercase tracking-widest mb-0.5">Dibuat Pada</p>
+                                        <p class="font-bold text-on-surface">{{ $ticket->created_at->format('d M, H:i') }}</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-[9px] font-bold text-on-surface-variant/70 uppercase tracking-widest mb-0.5">Status</p>
+                                        <div class="flex justify-end">
+                                            @if($ticket->status === 'baru')
+                                                <span class="font-black text-error">Baru</span>
+                                            @elseif($ticket->status === 'diproses')
+                                                <span class="font-black text-tertiary">Diproses</span>
+                                            @elseif($ticket->status === 'selesai')
+                                                <span class="font-black text-success">Selesai</span>
+                                            @else
+                                                <span class="font-black text-on-surface-variant">Ditutup</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Card Action Buttons -->
+                            <div class="flex items-center justify-between border-t border-outline-variant/10 pt-4 pb-12">
+                                <a href="{{ route('tickets.show', $ticket->id) }}" class="inline-flex items-center gap-1 text-xs font-black text-primary hover:text-primary-container transition-colors uppercase tracking-wider">
+                                    <span class="material-symbols-outlined text-sm">visibility</span> Detail
+                                </a>
+                                
+                                @if(
+                                    auth()->user()->role === 'admin' ||
+                                    (auth()->user()->role === 'agent' && (is_null($ticket->agent_id) || $ticket->agent_id === auth()->id())) ||
+                                    (auth()->user()->role === 'user' && $ticket->user_id === auth()->id() && $ticket->status === 'baru')
+                                )
+                                    <a href="{{ route('tickets.edit', $ticket->id) }}" class="inline-flex items-center gap-1 text-xs font-black text-secondary hover:text-secondary-container transition-colors uppercase tracking-wider">
+                                        <span class="material-symbols-outlined text-sm">edit</span> Ubah
+                                    </a>
                                 @endif
                             </div>
                         </div>
 
-                        <!-- Nested Glass Details Pane -->
-                        <div class="glass-sub-card p-4 rounded-2xl mb-4 space-y-4">
-                            <!-- Reporter & Ticket Title Info -->
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-full border-2 border-white/60 shadow-sm bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-black text-xs shrink-0">
-                                    {{ strtoupper(substr($ticket->user->name, 0, 2)) }}
-                                </div>
-                                <div class="min-w-0 flex-1">
-                                    <p class="font-bold text-sm text-on-surface leading-tight truncate">{{ $ticket->user->name }}</p>
-                                    <p class="text-xs text-on-surface-variant font-medium truncate mt-0.5">
-                                        <a href="{{ route('tickets.show', $ticket->id) }}" class="hover:underline hover:text-primary transition-colors">
-                                            {{ $ticket->title }}
-                                        </a>
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div class="glass-divider my-2"></div>
-
-                            <!-- Details Section -->
-                            <div class="flex justify-between items-center text-xs">
-                                <div>
-                                    <p class="text-[9px] font-bold text-on-surface-variant/70 uppercase tracking-widest mb-0.5">Dibuat Pada</p>
-                                    <p class="font-bold text-on-surface">{{ $ticket->created_at->format('d M, H:i') }}</p>
-                                </div>
-                                <div class="text-right">
-                                    <p class="text-[9px] font-bold text-on-surface-variant/70 uppercase tracking-widest mb-0.5">Status</p>
-                                    <div class="flex justify-end">
-                                        @if($ticket->status === 'baru')
-                                            <span class="font-black text-error">Baru</span>
-                                        @elseif($ticket->status === 'diproses')
-                                            <span class="font-black text-tertiary">Diproses</span>
-                                        @elseif($ticket->status === 'selesai')
-                                            <span class="font-black text-success">Selesai</span>
-                                        @else
-                                            <span class="font-black text-on-surface-variant">Ditutup</span>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
+                        <!-- Bottom Status Banner -->
+                        <div class="absolute bottom-0 left-0 w-full h-6 {{ $bgColor }} {{ $neonGlow }} flex items-center justify-center">
+                            <span class="text-[10px] font-black text-white uppercase tracking-[0.5em]">{{ $bannerText }}</span>
                         </div>
-
-                        <!-- Card Action Buttons -->
-                        <div class="flex items-center justify-between border-t border-outline-variant/10 pt-4 pb-12">
-                            <a href="{{ route('tickets.show', $ticket->id) }}" class="inline-flex items-center gap-1 text-xs font-black text-primary hover:text-primary-container transition-colors uppercase tracking-wider">
-                                <span class="material-symbols-outlined text-sm">visibility</span> Detail
-                            </a>
-                            
-                            @if(
-                                auth()->user()->role === 'admin' ||
-                                (auth()->user()->role === 'agent' && (is_null($ticket->agent_id) || $ticket->agent_id === auth()->id())) ||
-                                (auth()->user()->role === 'user' && $ticket->user_id === auth()->id() && $ticket->status === 'baru')
-                            )
-                                <a href="{{ route('tickets.edit', $ticket->id) }}" class="inline-flex items-center gap-1 text-xs font-black text-secondary hover:text-secondary-container transition-colors uppercase tracking-wider">
-                                    <span class="material-symbols-outlined text-sm">edit</span> Ubah
-                                </a>
-                            @endif
-                        </div>
-                    </div>
-
-                    <!-- Bottom Status Banner -->
-                    <div class="absolute bottom-0 left-0 w-full h-6 {{ $bgColor }} {{ $neonGlow }} flex items-center justify-center">
-                        <span class="text-[10px] font-black text-white uppercase tracking-[0.5em]">{{ $bannerText }}</span>
                     </div>
                 </div>
             @endforeach

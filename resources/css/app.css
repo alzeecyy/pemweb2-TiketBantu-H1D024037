@@ -204,4 +204,49 @@ input[type="checkbox"]:focus {
     box-shadow: 0 0 0 3px rgba(224, 64, 160, 0.15) !important;
 }
 
+/* === Drag-and-Drop Shopify Draggable Styles === */
 
+/* Container dragging state: matikan transition untuk semua card di dalam container agar pergeseran layout instan & smooth */
+.draggable-container--is-dragging .glass-card {
+    transition: none !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+}
+
+/* Source element (ghost/placeholder) yang ditinggalkan di grid */
+.draggable-source--is-dragging {
+    opacity: 0.25 !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 2px dashed rgba(224, 64, 160, 0.3) !important;
+    box-shadow: none !important;
+    transition: none !important;
+}
+
+/* Mirror (clone) yang melayang mengikuti mouse */
+.draggable-mirror {
+    position: fixed !important;
+    z-index: 999999 !important;
+    pointer-events: none !important;
+    transition: none !important;
+    opacity: 0.95 !important;
+    cursor: grabbing !important;
+}
+
+/* Terapkan transformasi (rotasi & skala) pada pembungkus dalam agar tidak merusak posisi parent */
+.draggable-mirror .draggable-inner-wrapper {
+    transform: rotate(2deg) scale(1.04) !important;
+    transform-origin: center center !important;
+    box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.4), 0 0 20px rgba(224, 64, 160, 0.2) !important;
+    transition: none !important;
+}
+
+/* Handle cursor */
+[wire\:sortable\.handle] {
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+[wire\:sortable\.handle]:active {
+    cursor: grabbing;
+}

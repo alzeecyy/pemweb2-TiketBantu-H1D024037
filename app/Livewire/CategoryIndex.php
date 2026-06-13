@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 
 use App\Models\Category;
+use Illuminate\Support\Str;
 
 class CategoryIndex extends Component
 {
@@ -28,6 +29,7 @@ class CategoryIndex extends Component
 
         Category::create([
             'name' => $this->name,
+            'slug' => Str::slug($this->name),
         ]);
 
         $this->name = '';
@@ -61,6 +63,7 @@ class CategoryIndex extends Component
         $category = Category::findOrFail($this->editingCategoryId);
         $category->update([
             'name' => $this->editingCategoryName,
+            'slug' => Str::slug($this->editingCategoryName),
         ]);
 
         $this->editingCategoryId = null;

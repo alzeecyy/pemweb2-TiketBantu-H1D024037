@@ -58,6 +58,9 @@ class TicketIndex extends Component
             Ticket::where('id', $item['value'])
                 ->update(['sort_order' => $item['order']]);
         }
+
+        // Skip re-render karena DOM sudah diatur oleh SortableJS di client
+        $this->skipRender();
     }
 
     public function render()

@@ -6,6 +6,7 @@
 > - **NIM**: H1D024037
 > - **Kelas**: Pemrograman Web 2 A
 > - **Paket Soal**: Paket 7 — Sistem Helpdesk / Tiket Pengaduan
+> - **Repositori**: [github.com/alzeecyy/pemweb2-TiketBantu-H1D024037](https://github.com/alzeecyy/pemweb2-TiketBantu-H1D024037)
 
 ---
 
@@ -55,7 +56,7 @@ Aplikasi ini dibangun menggunakan performa kilat **Laravel 13** dan interaktivit
 
 1. **Unduh repositori**:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/alzeecyy/pemweb2-TiketBantu-H1D024037.git
    cd TiketBantu
    ```
 
@@ -151,31 +152,45 @@ Aplikasi **TiketBantu** telah dirancang untuk memenuhi spesifikasi pengujian dos
 
 ---
 
-## 🎬 Video Demo
+## 🎬 Video Demo & Repositori
 
 [![Video Demo TiketBantu](https://img.youtube.com/vi/_QkFm23BhLQ/maxresdefault.jpg)](https://youtu.be/_QkFm23BhLQ)
 
-🔗 **Tonton Video Demo**: [https://youtu.be/_QkFm23BhLQ](https://youtu.be/_QkFm23BhLQ)
+- 🔗 **Tonton Video Demo**: [https://youtu.be/_QkFm23BhLQ](https://youtu.be/_QkFm23BhLQ)
+- 🔗 **Repositori GitHub**: [https://github.com/alzeecyy/pemweb2-TiketBantu-H1D024037](https://github.com/alzeecyy/pemweb2-TiketBantu-H1D024037)
 
 ---
 
 ## 📸 Dokumentasi Tangkapan Layar (Demo)
 
 ### 🧑‍💼 Halaman Admin
+
 ![Admin 1](Upload/Admin/Screenshot%20(588).png)
+
 ![Admin 2](Upload/Admin/Screenshot%20(589).png)
+
 ![Admin 3](Upload/Admin/Screenshot%20(590).png)
+
 ![Admin 4](Upload/Admin/Screenshot%20(591).png)
+
 ![Admin 5](Upload/Admin/Screenshot%20(592).png)
 
 ### 🎧 Halaman Agen (Petugas)
+
 ![Agen 1](Upload/Agen/Screenshot%20(597).png)
+
 ![Agen 2](Upload/Agen/Screenshot%20(598).png)
+
 ![Agen 3](Upload/Agen/Screenshot%20(599).png)
+
 ![Agen 4](Upload/Agen/Screenshot%20(600).png)
 
 ### 👤 Halaman Pelapor (User)
+
 ![User 1](Upload/User/Screenshot%20(593).png)
+
 ![User 2](Upload/User/Screenshot%20(594).png)
+
 ![User 3](Upload/User/Screenshot%20(595).png)
+
 ![User 4](Upload/User/Screenshot%20(596).png)

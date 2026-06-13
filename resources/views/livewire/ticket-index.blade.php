@@ -208,35 +208,39 @@
                             </div>
                         </div>
 
-                        <!-- Reporter & Ticket Title Info -->
-                        <div class="flex items-center gap-4 mb-8">
-                            <div class="w-12 h-12 rounded-full border-2 border-white shadow-md bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-black text-xs shrink-0">
-                                {{ strtoupper(substr($ticket->user->name, 0, 2)) }}
+                        <!-- Nested Glass Details Pane -->
+                        <div class="glass-sub-card p-4 rounded-2xl mb-4 space-y-4">
+                            <!-- Reporter & Ticket Title Info -->
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full border-2 border-white/60 shadow-sm bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-black text-xs shrink-0">
+                                    {{ strtoupper(substr($ticket->user->name, 0, 2)) }}
+                                </div>
+                                <div class="min-w-0 flex-1">
+                                    <p class="font-bold text-sm text-on-surface leading-tight truncate">{{ $ticket->user->name }}</p>
+                                    <p class="text-xs text-on-surface-variant font-medium truncate mt-0.5">
+                                        <a href="{{ route('tickets.show', $ticket->id) }}" wire:navigate class="hover:underline hover:text-primary transition-colors">
+                                            {{ $ticket->title }}
+                                        </a>
+                                    </p>
+                                </div>
                             </div>
-                            <div class="min-w-0">
-                                <p class="font-black text-on-surface leading-tight truncate">{{ $ticket->user->name }}</p>
-                                <p class="text-xs text-on-surface-variant font-medium truncate">
-                                    <a href="{{ route('tickets.show', $ticket->id) }}" wire:navigate class="hover:underline hover:text-primary transition-colors">
-                                        {{ $ticket->title }}
-                                    </a>
-                                </p>
-                            </div>
-                        </div>
 
-                        <!-- Details Section -->
-                        <div class="flex justify-between border-t border-dashed border-outline-variant pt-6 pb-4">
-                            <div>
-                                <p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">Dibuat Pada</p>
-                                <p class="text-sm font-bold">{{ $ticket->created_at->format('d M, H:i') }}</p>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">Status</p>
-                                <!-- Client-side directive: menggunakan Livewire wire:show untuk status -->
-                                <div class="flex justify-end">
-                                    <span x-show="'{{ $ticket->status }}' === 'baru'" class="text-sm font-black text-error">Baru</span>
-                                    <span x-show="'{{ $ticket->status }}' === 'diproses'" class="text-sm font-black text-tertiary">Diproses</span>
-                                    <span x-show="'{{ $ticket->status }}' === 'selesai'" class="text-sm font-black text-success">Selesai</span>
-                                    <span x-show="'{{ $ticket->status }}' === 'ditutup'" class="text-sm font-black text-on-surface-variant">Ditutup</span>
+                            <div class="glass-divider my-2"></div>
+
+                            <!-- Details Section -->
+                            <div class="flex justify-between items-center text-xs">
+                                <div>
+                                    <p class="text-[9px] font-bold text-on-surface-variant/70 uppercase tracking-widest mb-0.5">Dibuat Pada</p>
+                                    <p class="font-bold text-on-surface">{{ $ticket->created_at->format('d M, H:i') }}</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-[9px] font-bold text-on-surface-variant/70 uppercase tracking-widest mb-0.5">Status</p>
+                                    <div class="flex justify-end">
+                                        <span x-show="'{{ $ticket->status }}' === 'baru'" class="font-black text-error">Baru</span>
+                                        <span x-show="'{{ $ticket->status }}' === 'diproses'" class="font-black text-tertiary">Diproses</span>
+                                        <span x-show="'{{ $ticket->status }}' === 'selesai'" class="font-black text-success">Selesai</span>
+                                        <span x-show="'{{ $ticket->status }}' === 'ditutup'" class="font-black text-on-surface-variant">Ditutup</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>

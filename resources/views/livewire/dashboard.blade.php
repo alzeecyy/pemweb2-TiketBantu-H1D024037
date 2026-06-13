@@ -164,7 +164,7 @@
                 @else
                     <div class="space-y-3">
                         @foreach($urgentTickets as $ticket)
-                            <a href="{{ route('tickets.show', $ticket->id) }}" wire:navigate class="block p-3 rounded-xl bg-surface hover:bg-error/5 border border-outline-variant/10 transition-colors">
+                            <a href="{{ route('tickets.show', $ticket->id) }}" wire:navigate class="block p-3 rounded-xl glass-sub-card hover:bg-error/10 transition-colors">
                                 <div class="flex justify-between items-start mb-1">
                                     <span class="text-[10px] font-black text-on-surface-variant">#{{ str_pad($ticket->id, 5, '0', STR_PAD_LEFT) }}</span>
                                     <span class="text-[10px] font-bold text-on-surface-variant">{{ $ticket->created_at->diffForHumans() }}</span>
@@ -191,7 +191,7 @@
                 @else
                     <div class="space-y-3">
                         @foreach($mediumTickets as $ticket)
-                            <a href="{{ route('tickets.show', $ticket->id) }}" wire:navigate class="block p-3 rounded-xl bg-surface hover:bg-orange-500/5 border border-outline-variant/10 transition-colors">
+                            <a href="{{ route('tickets.show', $ticket->id) }}" wire:navigate class="block p-3 rounded-xl glass-sub-card hover:bg-orange-500/10 transition-colors">
                                 <div class="flex justify-between items-start mb-1">
                                     <span class="text-[10px] font-black text-on-surface-variant">#{{ str_pad($ticket->id, 5, '0', STR_PAD_LEFT) }}</span>
                                     <span class="text-[10px] font-bold text-on-surface-variant">{{ $ticket->created_at->diffForHumans() }}</span>
@@ -218,7 +218,7 @@
                 @else
                     <div class="space-y-3">
                         @foreach($lowTickets as $ticket)
-                            <a href="{{ route('tickets.show', $ticket->id) }}" wire:navigate class="block p-3 rounded-xl bg-surface hover:bg-yellow-500/5 border border-outline-variant/10 transition-colors">
+                            <a href="{{ route('tickets.show', $ticket->id) }}" wire:navigate class="block p-3 rounded-xl glass-sub-card hover:bg-yellow-500/10 transition-colors">
                                 <div class="flex justify-between items-start mb-1">
                                     <span class="text-[10px] font-black text-on-surface-variant">#{{ str_pad($ticket->id, 5, '0', STR_PAD_LEFT) }}</span>
                                     <span class="text-[10px] font-bold text-on-surface-variant">{{ $ticket->created_at->diffForHumans() }}</span>

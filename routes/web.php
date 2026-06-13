@@ -8,7 +8,7 @@ use App\Livewire\TicketEdit;
 use App\Livewire\CategoryIndex;
 use App\Livewire\UserIndex;
 
-Route::redirect('/', 'tickets');
+Route::redirect('/', 'dashboard');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', Dashboard::class)->name('dashboard');
